@@ -23,19 +23,19 @@
 
     <section>
         <div id="characterInfo" id="leftSide">
-            <div class="imgContainerChar">
+            <div id="imgContainerChar">
                 <!-- <img id="avatar" src="" width="" height="" alt="character"> -->
             </div>
-            <div id="characterStats">
+            <div id="charStats">
                 <h4>Character Info</h4>
                 <ul>
-                    <li id="userName">Name: </li>
-                    <li>HP: 0</li>
-                    <li>Race:</li>
-                    <li>Armor:</li>
-                    <li>Weapon:</li>
-                    <li>Attack: 0</li>
-                    <li>Defence: 0</li>
+                    <li id="userName">Name:</li>
+                    <li id="userHP">HP: 0</li>
+                    <li id="userRace">Race:</li>
+                    <li id="userArm">Armor:</li>
+                    <li id ="userWeap">Weapon:</li>
+                    <li id="userAtt">Attack: 0</li>
+                    <li id="userDef">Defence: 0</li>
                 </ul>       
             </div> 
         </div>
@@ -46,14 +46,14 @@
             <div id="storyContainer">
                 <div >
                     <p id="storyReaction">
-                        Story Reaction placeholder  
+                        Welcome to Aventurer
                     </p>
                 </div>
-                    <div id="storyImgContainer">
+                    <div id="imgContainerStory">
                     </div>
                 <div>
                     <p id="storyPrompt">
-                        Story Prompt Text Placeholder
+                        Start Game?
                     </p>
                 </div>
                 <br>
@@ -65,9 +65,9 @@
                 </div>
 
                 <div id="storyChoice">
-                    <div id="choice1">choice 1</div>
-                    <div id="choice2">choice 2</div>
-                    <div id="choice3">choice 3</div>
+                    <div id="choice1"></div>
+                    <div id="choice2">Start Game</div>
+                    <div id="choice3"></div>
                 </div>
             </div>  
         </main>
@@ -75,19 +75,19 @@
     <br>
 
         <div id="EnemyInfo" id="rightSide">
-            <div class="imgContainerEnemy">
+            <div id="imgContainerEnemy">
                 <!-- <img id="avatar" src="" width="200" height="200" alt="enemy"> -->
             </div>
             <div id="enemyStats">
                 <h4>Enemy Info</h4>
                 <ul>
-                    <li>Name: </li>
-                    <li>HP: 0</li>
+                    <li id="enemyName">Name:</li>
+                    <li id="enemyHP">HP:</li>
                     <!-- <li>Race:</li> -->
                     <!-- <li>Armor:</li> -->
                     <!-- <li>Weapon:</li> -->
-                    <li>Attack: 0</li>
-                    <li>Defence: 0</li>
+                    <li id="enemyAtt">Attack: </li>
+                    <li id="enemyDef">Defence: </li>
                 </ul>       
             </div> 
         </div>
@@ -97,7 +97,7 @@
         footer
         <div>
             <audio id="gameMusic"  controls autoplay loop>
-                <source src="./sound files/medieval-background-196571.mp3" type="audio/mp3">
+                <!-- <source src="./sound files/medieval-background-196571.mp3" type="audio/mp3"> -->
             </audio>
         </div>
     </footer>
