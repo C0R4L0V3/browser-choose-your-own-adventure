@@ -2,18 +2,7 @@
 //-- autoplay plays audio media--
 // audioElement.play("#gameMusic");    
 
-btns.forEach((btn) => {
-    if (choice1Btn.addEventListener('click', (event) => {
 
-    }))
-    else if (choice2Btn.addEventListener('click', (event) =>{
-
-    }))
-    else if (choice3Btn.addEventListener('click', (event) =>{
-        
-    }))
-
-})
 
 //=============== Constants ===============
 
@@ -25,6 +14,7 @@ btns.forEach((btn) => {
 
 
 //--query selector for Character Stats--
+const userInfo = document.querySelector("#imgContainerChar")
 const userName = document.querySelector("#userName");
 const userHP = document.querySelector("#userHP");
 const userRace = document.querySelector("#userRace");
@@ -49,7 +39,7 @@ const  storyPrompt = document.querySelector("#storyPrompt");
 
 //--query selectors for each button & Input--
 const charName = document.querySelector("#charName");
-const btns = document.querySelectorAll("storyChoice")
+const btns = document.querySelectorAll(".btn")
 const choice1Btn = document.querySelector(".choice1");
 const choice2Btn = document.querySelector(".choice2");
 const choice3Btn = document.querySelector(".choice3");
@@ -89,16 +79,21 @@ const randomDice = (min, max) => {
 const raceDecision = () => {
     storyPrompt.innerText = "Please Select a Race";
     choice1Btn.style.visibility = "visible";
-    choice1Btn.innerText = "Human\n(male)";
-    event.target.innerText = "Elf\n(female)";
+    choice1Btn.innerText = "Human\n(male)\n+2 Att / +2 Def";
+    event.target.innerText = "Elf\n(female)\n+3 Att / +1 Def";
     choice3Btn.style.visibility = "visible";
-    choice3Btn.innerText = "Dwarf\n(male)";
+    choice3Btn.innerText = "Dwarf\n(male)\n+1 Att / +3 Def";
+}
+
+const pickName = () => {
+
 }
 
 
 
 //=============== EventListeners ===============
 
+//-- game start Char Creation --
 choice2Btn.addEventListener('click', (event)=> {
     // console.dir(choice2Btn)
     // console.log ("clicked")
@@ -107,15 +102,26 @@ choice2Btn.addEventListener('click', (event)=> {
     }
 })
 
+//-- race output --
 btns.forEach((btn) => {
-    if (choice1Btn.addEventListener('click', (event) => {
-
-    }))
-    else if (choice2Btn.addEventListener('click', (event) =>{
-
-    }))
-    else if (choice3Btn.addEventListener('click', (event) =>{
-        
-    }))
-
+    btn.addEventListener('click', (event) => {
+    if (event.target.classlist.contains("choice1")){
+        userInfo. style.visibility = "visible";
+        console.log("mic check")
+        userRace.innerHTML = "Race: Human"
+        userAtt.innerText += 2
+        userDef.innerText += 2
+        charImg.style.backgroundImage = "url(./images/human avatar.jpeg)"
+        charImg.style.visibility = "visible"
+         }
+    })
 })
+
+// else if (choice2Btn.addEventListener('click', (event) =>{
+
+    // }))
+    // else if (choice3Btn.addEventListener('click', (event) =>{
+        
+    // }))
+
+

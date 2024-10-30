@@ -26,6 +26,11 @@ export const weapons = [
     {name: "Great Hammer", attack: 0},
 ];
 
+export let texts = [
+    ["Please Select a Race", "Human\n(male)\n+2 Att / +2 Def", "Elf\n(female)\n+3 Att / +1 Def", "Dwarf\n(male)", "You have selected Human", "Dwarf\n(male)\n+1 Att / +3 Def"]
+]
+
+
 // const consumables = [
 //     {name: "potions"},
 //     {name: "arrows"},        //dont think I'll need this object array

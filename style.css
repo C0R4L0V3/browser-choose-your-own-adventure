@@ -174,8 +174,11 @@ main {
     align-items: center;
     justify-content: center;
     text-align: center;
+    font-size: 15px;
+    line-height: 15px;
     width: 100px;
     height: 80px;
+    cursor: pointer;
 }
 
 .choice2 {
@@ -185,8 +188,11 @@ main {
     align-items: center;
     justify-content: center;
     text-align: center;
+    font-size: 15px;
+    line-height: 15px;
     width: 100px;
     height: 80px;
+    cursor: pointer;
 }
 
 .choice3 {
@@ -197,8 +203,11 @@ main {
     align-items: center;
     justify-content: center;
     text-align: center;
+    font-size: 15px;
+    line-height: 15px;
     width: 100px;
     height: 80px;
+    cursor: pointer;
 }
 
 #EnemyInfo {
