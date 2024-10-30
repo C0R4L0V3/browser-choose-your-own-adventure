@@ -1,26 +1,11 @@
 body {
     background-color: black;
-    /* background-image: url(./images/storybook.jpg); */
-    /* background-attachment: fixed;
-    background-size: cover; */
     font-family: "El Messiri", sans-serif;
     font-optical-sizing: auto;
     font-weight: 100;
     font-style: normal;
     height: 100%;
     overflow: hidden;
-    /* display: flex;
-    flex-direction: column; */
-    /* align-items: center;
-    justify-content: center; */
-
-    /* grid-template-columns: 1fr 60% 1fr;
-    grid-template-rows: 1fr 5fr 1fr; */
-    
-    /* grid-area: 
-    "header header header"
-    "leftSide story rightSide"
-    "footer footer footer"; */
 }
 
 
@@ -181,34 +166,37 @@ main {
     padding: 20px;
 }
 
-#choice1 {
+.choice1 {
     border: 3px goldenrod double;
     background-image: linear-gradient(to bottom right, rgb(93, 38, 38), rgb(194, 191, 156) );
     visibility: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
     width: 100px;
     height: 80px;
 }
 
-#choice2 {
+.choice2 {
     border: 3px goldenrod double;
     background-image: linear-gradient(to bottom right, rgb(93, 38, 38), rgb(194, 191, 156) );
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
     width: 100px;
     height: 80px;
 }
 
-#choice3 {
+.choice3 {
     border: 3px goldenrod double;
     background-image: linear-gradient(to bottom right, rgb(93, 38, 38), rgb(194, 191, 156) );
     visibility: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
     width: 100px;
     height: 80px;
 }
@@ -249,12 +237,14 @@ footer {
     background-size: cover;
     background-position: bottom;
     box-shadow: 0 50vh 0 50vh #000;
+    color: azure;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100%;
-    width: auto;
+    width: 100%;
+    
     padding: 30px;
     border-top: 3px goldenrod double;
 }
@@ -262,4 +252,5 @@ footer {
 audio {
     border: 3px goldenrod double;
     border-radius: 50px;
+    margin-top: 20px;
 }
