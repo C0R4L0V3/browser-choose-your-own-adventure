@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventures in Avalon</title>
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="./app.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee+Tint&family=El+Messiri:wght@400..700&family=Londrina+Shadow&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header >
+        <div id="gameTitle">
+            <h2>Adventures</h2>
+            <h3>in</h3>
+            <h1>AVALON</h1>
+        </div>
+    </header>
+    <br>
+
+    <section>
+        <div id="characterInfo" id="leftSide">
+            <div class="imgContainerChar">
+                <!-- <img id="avatar" src="" width="" height="" alt="character"> -->
+            </div>
+            <div id="characterStats">
+                <h4>Character Info</h4>
+                <ul>
+                    <li id="userName">Name: </li>
+                    <li>HP: 0</li>
+                    <li>Race:</li>
+                    <li>Armor:</li>
+                    <li>Weapon:</li>
+                    <li>Attack: 0</li>
+                    <li>Defence: 0</li>
+                </ul>       
+            </div> 
+        </div>
+
+    <br>
+    
+        <main id="Story">
+            <div id="storyContainer">
+                <div >
+                    <p id="storyReaction">
+                        Story Reaction placeholder  
+                    </p>
+                </div>
+                    <div id="storyImgContainer">
+                    </div>
+                <div>
+                    <p id="storyPrompt">
+                        Story Prompt Text Placeholder
+                    </p>
+                </div>
+                <br>
+                <div id="nameInput">
+                    <form tartget="">
+                        <!-- <label></label> -->
+                        <input type="text" id="charName" name="charName" value="">
+                    </form>
+                </div>
+
+                <div id="storyChoice">
+                    <div id="choice1">choice 1</div>
+                    <div id="choice2">choice 2</div>
+                    <div id="choice3">choice 3</div>
+                </div>
+            </div>  
+        </main>
+    
+    <br>
+
+        <div id="EnemyInfo" id="rightSide">
+            <div class="imgContainerEnemy">
+                <!-- <img id="avatar" src="" width="200" height="200" alt="enemy"> -->
+            </div>
+            <div id="enemyStats">
+                <h4>Enemy Info</h4>
+                <ul>
+                    <li>Name: </li>
+                    <li>HP: 0</li>
+                    <!-- <li>Race:</li> -->
+                    <!-- <li>Armor:</li> -->
+                    <!-- <li>Weapon:</li> -->
+                    <li>Attack: 0</li>
+                    <li>Defence: 0</li>
+                </ul>       
+            </div> 
+        </div>
+    </section>
+    <br>
+    <footer>
+        footer
+        <div>
+            <audio id="gameMusic"  controls autoplay loop>
+                <source src="./sound files/medieval-background-196571.mp3" type="audio/mp3">
+            </audio>
+        </div>
+    </footer>
+
+    
+</body>
+</html>

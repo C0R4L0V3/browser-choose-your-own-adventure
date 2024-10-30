@@ -1,0 +1,219 @@
+body {
+    background-color: black;
+    /* background-image: url(./images/storybook.jpg); */
+    /* background-attachment: fixed;
+    background-size: cover; */
+    font-family: "El Messiri", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 100;
+    font-style: normal;
+    /* display: flex;
+    flex-direction: column; */
+    /* align-items: center;
+    justify-content: center; */
+
+    /* grid-template-columns: 1fr 60% 1fr;
+    grid-template-rows: 1fr 5fr 1fr; */
+    
+    /* grid-area: 
+    "header header header"
+    "leftSide story rightSide"
+    "footer footer footer"; */
+}
+
+li {
+    list-style: none;
+}
+
+header {
+    /* background-color: bisque; */
+    grid-column: span 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    letter-spacing: 1cap;
+    line-height: 50%;
+    flex-direction: row;
+    height: 20%;
+    margin: 30px;
+}
+
+#gameTitle {
+    background-color: black;
+    background-image: url(./images/title\ bg.jpg);
+    background-attachment: relative;
+    background-position-y: 20%;
+    /* background-size: cover; */
+    color: black;
+    width: 600px;
+    height: 110px;
+    border: 3px goldenrod double;
+   
+}
+
+section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 60%;
+}
+
+.imgContainerChar {
+    background-image: url();
+    background-size: cover;
+    overflow: hidden;
+    width: 168px;
+    height: 270px;
+    background-color: gray;
+    border: 3px goldenrod double;
+    border-radius: 10px;
+
+}
+
+#characterInfo {
+    /* background-color: violet; */
+    /* visibility: hidden; */
+    color: azure;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 30vw;
+    width: 20%;
+
+}
+
+main {
+    /* background-color: cadetblue; */
+    /* display: flex;
+    align-items: center;
+    justify-content: center; */
+    width: 60%;
+}
+
+#storyContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#storyReaction {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    border: 3px goldenrod double;
+    background-image: linear-gradient(to bottom right, rgb(93, 38, 38), rgb(194, 191, 156) );
+    text-align: center;
+    width: 400px;
+    height: 100px;
+}
+
+
+#storyImgContainer {
+    background-image: url(./images/storybook.jpg);
+    background-size: cover;
+    border: 3px goldenrod double;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 420px;
+    height: 240px;
+}
+
+
+#storyPrompt{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    border: 3px goldenrod double;
+    background-image: linear-gradient(to bottom right, rgb(93, 38, 38), rgb(194, 191, 156) );
+    text-align: center;
+    width: 400px;
+    height: 100px;
+}
+/* 
+#nameInput {
+    visibility: hidden;
+} */
+
+#storyChoice{
+    /* background-color: aliceblue; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 400px;
+    margin: 0 0px 0 20px;
+    padding: 20px;
+}
+
+#choice1 {
+    border: 3px goldenrod double;
+    background-image: linear-gradient(to bottom right, rgb(93, 38, 38), rgb(194, 191, 156) );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 80px;
+}
+
+#choice2 {
+    border: 3px goldenrod double;
+    background-image: linear-gradient(to bottom right, rgb(93, 38, 38), rgb(194, 191, 156) );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 80px;
+    
+
+}
+
+#choice3 {
+    border: 3px goldenrod double;
+    background-image: linear-gradient(to bottom right, rgb(93, 38, 38), rgb(194, 191, 156) );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 80px;
+
+}
+
+.imgContainerEnemy {
+    background-image: url();
+    background-size: cover;
+    width: 168px;
+    height: 270px;
+    background-color: gray;
+    border: 3px goldenrod double;
+    border-radius: 10px;
+
+}
+
+#EnemyInfo {
+    /* background-color: limegreen; */
+    /* visibility: hidden; */
+    color: azure;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    height: 30vw;
+    width: 20%;
+}
+
+footer {
+    background-color: aquamarine;
+    grid-column: span 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 20%;
+}
