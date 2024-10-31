@@ -71,7 +71,9 @@ let weapPicked = false      //<<--- put in an array
 let armorPicked = false      //<< putting this in an array in broke the game
 let charComplete = false
 
+let questAccepted = false
 let questItemGained = false
+let questCompleted = false
 
 
 //=============== Functions ===============
@@ -176,7 +178,6 @@ const armHandler = (num) => {
 }
 
 //=============== EventListeners ===============
-init()
 
 //-- Game Start Char Creation --
 const init = () => {
@@ -210,8 +211,9 @@ const init = () => {
     
     })
    
+}
 
-// init()
+init()
 
 
 
@@ -311,7 +313,8 @@ const townDir = ()=> {
 }
 
 const innDir = () => {
-    reaction.innerText = "As you enter the Inn it is busy, even durning the day, you see a woman who is distrought, perhaps she need some help? You could also rent a room and stay in towna bit"
+
+    reaction.innerText = "As you enter the Inn it is busy, even durning the day. You see a woman who is distrought, perhaps she need some help? You could also rent a room and stay in towna bit"
 
     storyImg.style.backgroundImage = `url(./images/inn.jpg)`
 
@@ -342,7 +345,17 @@ const innDir = () => {
 
 
 const roomRent = () => {
+    choice2Btn.style.visibility = "hidden"
 
+    reaction.innerText = "As you approach the Innkeeper, you get a weird feeling"
+
+    storyImg.style.backgroundImage = `url(./images/blacksmith.jpg)`
+
+    storyPrompt.innerText = "What would you like to do?"
+
+    choice1Btn.innerText = "Ignore the feeling\nRent the room\n (15 gold)"
+    choice2Btn.innerText = ""
+    choice3Btn.innerText = "Leave"
 }
 
 
@@ -356,7 +369,7 @@ const blackSmithDir = () => {
 
     storyPrompt.innerText = "What would you like to do?"
 
-    choice1Btn.innerText = "Buy ring\n120 gold"
+    choice1Btn.innerText = "Buy ring\n(120 gold)"
     choice2Btn.innerText = ""
     choice3Btn.innerText = "Leave"
 
@@ -389,10 +402,10 @@ const blackSmithDir = () => {
 const dwarfPerk = () => {
 
     reaction.innerText = `"Ah a fellow kinsmen! Rare in these parts! I'll give it to you for 30% off!"`   
-
+    storyImg.style.backgroundImage = `url(./images/blacksmith.jpg)`
     storyPrompt.innerText = "What would you like to do?"
 
-    choice1Btn.innerText = "Buy ring \n 140 gold"
+    choice1Btn.innerText = "Buy ring \n (140 gold)"
     choice2Btn.innerText = ""
     choice3Btn.innerText = "Leave"
 
@@ -426,7 +439,7 @@ const notEnoughGoldBS = () => {
     choice3Btn.style.visibility = "hidden"
 
     reaction.innerText = `"GET OUT OF HERE YOU CHEAPSKATE!"`
-    
+    storyImg.style.backgroundImage = `url(./images/blacksmith.jpg)`
     storyPrompt.innerText = "You're being kick out!"
 
     choice2Btn.innerText = "Leave"
@@ -449,7 +462,7 @@ const boughtRing = () => {
     choice3Btn.style.visibility = "hidden"
 
     reaction.innerText = `WOW, it was Ring of WINNING?! What kinda dumb dwarf would give this away for so cheap!?`
-    
+    storyImg.style.backgroundImage = `url(./images/blacksmith.jpg)`
     storyPrompt.innerText = "You won! \n Play Again?"
 
     choice2Btn.innerText = "Start Over"
@@ -469,7 +482,8 @@ const boughtRing = () => {
     })
 
 }
-}
+
+
 
 // const forestDir = () => {
 
