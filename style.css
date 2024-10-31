@@ -85,7 +85,7 @@ ul, li {
 }
 
 #imgContainerChar {
-    background-image: url();
+    background-image: url(./images/human.jpeg);
     background-size: cover;
     visibility: hidden;
     width: 168px;
@@ -97,9 +97,9 @@ ul, li {
 
 }
 
-#charStats {
+/* #charStats {
     visibility: hidden;
-}
+} */
 
 main {
     /* background-color: cadetblue; */
@@ -111,6 +111,7 @@ main {
 }
 
 #storyContainer {
+    /* background-color: aqua; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -138,6 +139,8 @@ main {
     justify-content: center;
     width: 420px;
     height: 240px;
+    padding: 20px;
+    margin: 20px 0 20px 0;
 }
 
 #storyPrompt{
@@ -150,20 +153,21 @@ main {
     text-align: center;
     width: 400px;
     height: 100px;
+ 
 }
 
-#nameInput {
+/* #nameInput {
     visibility: hidden;
-}
+} */
 
 #storyChoice{
     /* background-color: aliceblue; */
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 400px;
-    margin: 0 0px 0 20px;
-    padding: 20px;
+    width: 450px;
+    padding-bottom: 20px;
+    
 }
 
 .choice1 {
@@ -176,7 +180,7 @@ main {
     text-align: center;
     font-size: 15px;
     line-height: 15px;
-    width: 100px;
+    width: 120px;
     height: 80px;
     cursor: pointer;
 }
@@ -234,9 +238,9 @@ main {
     margin-top: 40px;
 }
 
-#enemyStats {
+/* #enemyStats {
     visibility: hidden;
-}
+} */
 
 
 

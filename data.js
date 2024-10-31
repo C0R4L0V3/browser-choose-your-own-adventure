@@ -7,16 +7,16 @@ export const enemies = [
 
 ];
 
-export const characterRace =[
-    {name: "Human", attack: 0, defense: 0,},
-    {name: "Elf", attack: 0, defense: 0,},
-    {name: "Dwarf", attack: 0, defense: 0,},
-    // {name: "Orc", attack: 0, defense: 0,},  limiting to three to make thing simplier
-]
+// export const characterRace =[
+//     {race: "Human", hp: 30, attack: ["Attack" 2], defense: 2},
+//     {race: "Elf", attack: ["Attack:" 3], defense: 1},
+//     {race: "Dwarf", attack: ["Attack:" 1], defense: 3},
+//     // {name: "Orc", attack: 0, defense: 0,},  limiting to three to make thing simplier
+// ]
 
 export const armors = [
     {name: "Leather Armor", defense: 0,},
-    {name: "Cloth Robe", defense: 0,},
+    {name: "Chain Mail", defense: 0,},
     {name: "Plate Armor", defense: 0,},
 ];
  
