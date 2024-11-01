@@ -14,21 +14,21 @@ export const enemies = [
 //     // {name: "Orc", attack: 0, defense: 0,},  limiting to three to make thing simplier
 // ]
 
-export const armors = [
-    {name: "Leather Armor", defense: 0,},
-    {name: "Chain Mail", defense: 0,},
-    {name: "Plate Armor", defense: 0,},
-];
+// export const armors = [
+//     {name: "Leather Armor", defense: 0,},
+//     {name: "Chain Mail", defense: 0,},
+//     {name: "Plate Armor", defense: 0,},
+// ];
  
-export const weapons = [
-    {name: "Sword and Sheild", attack: 0, defense: 0},
-    {name: "Bow", attack: 0,},
-    {name: "Great Hammer", attack: 0},
-];
+// export const weapons = [
+//     {name: "Sword and Sheild", attack: 0, defense: 0},
+//     {name: "Bow", attack: 0,},
+//     {name: "Great Hammer", attack: 0},
+// ];
 
-export let texts = [
-    ["Please Select a Race", "Human\n(male)\n+2 Att / +2 Def", "Elf\n(female)\n+3 Att / +1 Def", "Dwarf\n(male)", "You have selected Human", "Dwarf\n(male)\n+1 Att / +3 Def"]
-]
+// export let texts = [
+//     ["Please Select a Race", "Human\n(male)\n+2 Att / +2 Def", "Elf\n(female)\n+3 Att / +1 Def", "Dwarf\n(male)", "You have selected Human", "Dwarf\n(male)\n+1 Att / +3 Def"]
+// ]
 
 
 // const consumables = [

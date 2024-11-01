@@ -61,7 +61,11 @@ const game = {
         {name: "Leather", attack: 2, defense: 1,},
         {name: "Chain Mail", attack: 1, defense: 2,},
         {name: "Plate Armor", attack: 0, defense: 3,},
-    ]
+    ],
+    // gameScenes: [
+    //     advenStart, meadowDir, townDir, innDir, roomRent, blackSmithDir, dwarfPerk, notEnoughGoldBS, boughtRing
+    // ],
+
 };
 
 
@@ -71,8 +75,8 @@ let weapPicked = false      //<<--- put in an array
 let armorPicked = false      //<< putting this in an array in broke the game
 let charComplete = false
 
-let questAccepted = false
-let questItemGained = false
+let questBegan = false
+// let questItemGained = false
 let questCompleted = false
 
 
@@ -184,7 +188,7 @@ const init = () => {
  
     btns.forEach((btn, idx) => {
         btn.addEventListener('click', (event) => {
-            console.log(event.target.innerText)
+            console.log("start game", event.target.innerText)
             if(event.target.innerText === 'Start Game' && startGame === false){
                 startGame = true
                 console.log(startGame)
@@ -203,19 +207,39 @@ const init = () => {
             else if(weapPicked == true && charComplete === false){
                 armHandler(idx)
                 charComplete = true 
-                advenStart()  
+                btn.removeEventListener('click', (event))
+                advenStart()
+                
             }
-
-
-        })
-    
+        }) 
     })
-   
-}
+    btns.forEach((btn)=> {
+        btn.removeEventListener('click', (event))
+    })
+}  
+
 
 init()
 
+//thank you Ian for explain on how to do remove listener events
 
+//================= Meadow Functions & Handler ======================
+
+const meadowHandler = (meadow) => {
+    console.log(meadow.target.innerText)
+        if(meadow.target === choice1Btn){
+            townDir()
+        }
+        else if(meadow.target === choice2Btn){
+            forestDir()
+        }
+        else {
+            oldChurchDir()
+        }
+    btns.forEach((btn)=> {
+        btn.removeEventListener('click', meadowHandler)
+    })
+}
 
 const advenStart = () => {
 
@@ -234,18 +258,7 @@ const advenStart = () => {
     choice3Btn.innerText = "Forest"
 
     btns.forEach((btn) => {
-        btn.addEventListener('click', (event) => {
-            console.log(event.target.innerText)
-            if(event.target === choice1Btn){
-                townDir()
-            }
-            else if(event.target === choice2Btn){
-                forestDir()
-            }
-            else {
-                oldChurchDir()
-            }
-        })
+        btn.addEventListener('click', meadowHandler) 
     })
 }
 
@@ -266,22 +279,29 @@ const meadowDir = () => {
     choice3Btn.innerText = "Forest"
 
     btns.forEach((btn) => {
-        btn.addEventListener('click', (event) => {
-            console.log(event.target.innerText)
-            if(event.target === choice1Btn){
-                townDir()
-            }
-            else if(event.target === choice2Btn){
-                forestDir()
-            }
-            else {
-                oldChurchDir()
-            }
-        })
+        btn.addEventListener('click', meadowHandler)
+ 
     })
-
 }
 
+//================== Town Handler & Function ======================
+
+
+const townHandler = (town) => {
+    console.log(town.target.innerText)
+    if(town.target === choice1Btn){    
+        innDir()
+    }
+    else if(town.target === choice2Btn){
+        blackSmithDir()
+    }
+    else {
+        meadowDir()
+    }  
+    btns.forEach((btn)=> {
+    btn.removeEventListener('click', townHandler)
+})
+}
 
 const townDir = ()=> {
 
@@ -295,22 +315,33 @@ const townDir = ()=> {
     choice2Btn.innerText = "Blacksmith's"
     choice3Btn.innerText = "Meadow"
 
-    btns.forEach((btn) => {
-        btn.addEventListener('click', (event) => {
-            console.log(event.target.innerText)
-            if(event.target === choice1Btn){
-                innDir()
-            }
-            else if(event.target === choice2Btn){
-                blackSmithDir()
-            }
-            else {
-                meadowDir()
-            }
-        })
-    })
 
+    btns.forEach((btn) => {
+        btn.addEventListener('click', townHandler)
+   
+})
 }
+
+//================= Inn  Handlers & Functions ======================
+
+const innHandler = (inn) => {
+
+    console.log(inn.target.innerText)
+    if(inn.target === choice1Btn){
+        questStart()
+    }
+    else if(inn.target === choice2Btn){
+        roomRent()
+    }
+    else {
+        townDir()  
+    }
+
+    btns.forEach((btn)=> {
+        btn.removeEventListener('click', innHandler)
+    })
+}
+
 
 const innDir = () => {
 
@@ -325,41 +356,164 @@ const innDir = () => {
     choice3Btn.innerText = "Leave"
 
     btns.forEach((btn) => {
-        btn.addEventListener('click', (event) => {
-            console.log(event.target.innerText)
-            if(event.target === choice1Btn){
-                quest()
-            }
-            else if(event.target === choice2Btn){
-                roomRent()
-            }
-            else {
-                townDir()
-                
-            }
-        })
+        btn.addEventListener('click', innHandler)
+        
     })
-
-
 }
 
+//
+
+const roomHandler = (innRoom) => {
+
+    console.log(innRoom.target.innerText)
+    if(innRoom.target === choice1Btn){
+        ignoreInn()
+    }
+    else {
+        innDir()  
+    }
+
+    btns.forEach((btn) => {
+        btn.addEventListener('click', roomHandler)
+    })
+    choice2Btn.style.visibility = "visible"
+} 
 
 const roomRent = () => {
+
     choice2Btn.style.visibility = "hidden"
 
     reaction.innerText = "As you approach the Innkeeper, you get a weird feeling"
 
-    storyImg.style.backgroundImage = `url(./images/blacksmith.jpg)`
+    storyImg.style.backgroundImage = `url(./images/innkeeper.png)`
 
     storyPrompt.innerText = "What would you like to do?"
 
     choice1Btn.innerText = "Ignore the feeling\nRent the room\n (15 gold)"
     choice2Btn.innerText = ""
     choice3Btn.innerText = "Leave"
+
+    btns.forEach((btn) => {
+        btn.addEventListener('click', roomHandler)
+
+        })
+   }
+
+const ignoreInn = () => {
+
+    choice1Btn.style.visibility = "hidden"
+    choice3Btn.style.visibility = "hidden"
+
+    reaction.innerText = "Listening to you instincts is one of the first rules to being an Adventurer. And unfortunatly you wont be able to relearn form this mistake."
+
+    storyImg.style.backgroundImage = `url(./images/innroom.jpg)`
+
+    storyPrompt.innerText = "GAME OVER\nYou were murdered in your sleep and robbed"
+
+    choice2Btn.innerText = "Play Again?"
+
+    game.character.hp = 0
+    userHP.innerText = game.character.hp
+    game.character.armor= "None"
+    userArm.innerText = "Armor: " + game.character.armor
+    game.character.defense = 0
+    userDef.innerText = game.character.defense
+    game.character.weapon= "None"
+    userWeap.innerText = "Weapon: " + game.character.weapon
+    game.character.attack = 0
+    userAtt.innerText = game.character.attack
+    game.character.gold = 0
+    userGold.innerText = game.character.gold
+
+    choice2Btn.addEventListener('click', (event) =>{
+            console.log(event.target.innerText)
+            if(event.target === choice2Btn){
+            location.reload()
+            }
+        })
+}
+
+const questStartHandler = (quest) => {
+
+    console.log(quest.target.innerText)
+    if(quest.target === choice1Btn && questAccepted === false){
+        innDir() 
+    }
+    else {
+        questAccpeted()
+          
+    }
+
+    btns.forEach((btn) => {
+        btn.addEventListener('click', questStartHandler)
+    })
+    choice2Btn.style.visibility = "visible"
+}
+
+const questQuedHandler = (qued) => {
+
+    console.log(qued.target.innerText)
+    if(quest.target === choice1Btn && questAccepted === true){
+        innDir() 
+    }
+    btns.forEach((btn) => {
+        btn.addEventListener('click', questQuedHandler)
+    })
+    choice2Btn.style.visibility = "visible"
 }
 
 
+
+
+const questStart = () =>{
+
+    if (questBegan === false){
+    choice2Btn.style.visibility = "hidden"
+
+    reaction.innerText = 'The woman notices you approaching. and she says, "Oh! you wouldnt happen to be an adventure? I could really use your help with something involing the Old Church.'
+
+    storyImg.style.backgroundImage = `url(./images/Inngirl.jpg)`
+
+    storyPrompt.innerText = "Will you help me?"
+
+    choice1Btn.innerText = "Leave me alone, you Wench! \n (Leave)"
+    choice3Btn.innerText = "Of course fair maiden!\n (Accept Quest)"
+
+    btns.forEach((btn) => {
+        btn.addEventListener('click', questStartHandler)
+            
+        })
+    }
+    else if (questBegan === true && questCompleted === false){
+        reaction.innerText = `"Oh Adventure You've returned!` 
+
+        storyImg.style.backgroundImage = `url(./images/Inngirl.jpg)`
+
+        storyPrompt.innerText = `"Did you take my Ring to my Husbands grave?"`
+
+
+        choice1Btn.innerText = "Leave me alone, you Wench! \n (Leave)"
+        choice3Btn.innerText = "Not yet fiar Maiden \n (Leave"
+
+        btns.forEach((btn) => {
+            btn.addEventListener('click', questQuedHandler)
+        })
+    }
+    
+    else {
+
+    }
+    //-- add more to quest phase
+
+}
+
+
+
 const blackSmithDir = () => {
+
+    btns.forEach((btn)=> {
+        btn.removeEventListener('click', (event))
+        })
 
     choice2Btn.style.visibility = "hidden"
 
@@ -374,11 +528,11 @@ const blackSmithDir = () => {
     choice3Btn.innerText = "Leave"
 
     btns.forEach((btn) => {
-        btn.addEventListener('click', (event) => {
-            console.log(event.target.innerText)
+        btn.addEventListener('click', (event) =>{
+        console.log(event.target.innerText)
             if(event.target === choice1Btn){
                 if(game.character.gold >= 200 && game.character.race === "Dwarf"){
-                   dwarfPerk()
+                    dwarfPerk()
                 }
                 else if (game.character.gold >= 200){
                     game.character.gold -= 200
@@ -393,11 +547,13 @@ const blackSmithDir = () => {
                 choice2Btn.style.visibility = "visible"
                 townDir()
             }
-        })
+         })
     })
-
-
+    btns.forEach((btn)=> {
+        btn.removeEventListener('click', (event))
+    })
 }
+
 
 const dwarfPerk = () => {
 
@@ -410,8 +566,8 @@ const dwarfPerk = () => {
     choice3Btn.innerText = "Leave"
 
     btns.forEach((btn) => {
-        btn.addEventListener('click', (event) => {
-            console.log(event.target.innerText)
+        btn.addEventListener('click', (event) =>{
+        console.log(event.target.innerText)
             if(event.target === choice1Btn){
                 if(game.character.gold >= 140){
                     game.character.gold -= 140
@@ -424,12 +580,14 @@ const dwarfPerk = () => {
             }
             else {
                 choice2Btn.style.visibility = "visible"
-                townDir()
-                
+                townDir()  
             }
+
         })
     })
-
+    btns.forEach((btn)=> {
+        btn.removeEventListener('click', (event))
+    })
 }
 
 const notEnoughGoldBS = () => {
@@ -445,7 +603,7 @@ const notEnoughGoldBS = () => {
     choice2Btn.innerText = "Leave"
     
     btns.forEach((btn) => {
-        btn.addEventListener('click', (event) => {
+        btn.addEventListener('click', (event) =>{
             console.log(event.target.innerText)
             if(event.target === choice2Btn){
                 choice2Btn.style.visibility = "visible"
@@ -453,6 +611,9 @@ const notEnoughGoldBS = () => {
             }
         })
     })
+    btns.forEach((btn)=> {
+        btn.removeEventListener('click', (event))
+    }) 
 }
 
 const boughtRing = () => {
@@ -465,23 +626,22 @@ const boughtRing = () => {
     storyImg.style.backgroundImage = `url(./images/blacksmith.jpg)`
     storyPrompt.innerText = "You won! \n Play Again?"
 
-    choice2Btn.innerText = "Start Over"
-    
+    choice2Btn.innerText = "Play Again?"
+
     btns.forEach((btn) => {
-        btn.addEventListener('click', (event) => {
+        btn.addEventListener('click', (event) =>{
             console.log(event.target.innerText)
             if(event.target === choice2Btn){
-                startGame = false
-                charsPicked = false
-                weapPicked = false      //<<--- put in an array
-                armorPicked = false      //<< putting this in an array in broke the game
-                charComplete = false
-                init()
+            location.reload()
             }
         })
     })
-
+    btns.forEach((btn)=> {
+        btn.removeEventListener('click', (event))
+    })     
 }
+
+
 
 
 
