@@ -85,7 +85,7 @@ ul, li {
 }
 
 #imgContainerChar {
-    background-image: url(./images/human.jpeg);
+    /* background-image: url(./images/human.jpeg); */
     background-size: cover;
     visibility: hidden;
     width: 168px;

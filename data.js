@@ -1,11 +1,11 @@
 // ===== game  OBJECT database ======
 
-export const enemies = [
-    { name: "bear", hp: 15, attack: 0, defense: 0, loot: []},
-    { name: "skeleton", hp: 10, attack: 0, defense: 0, loot: []},
-    { name: null, hp: 0, attack: 0, defense: 0, loot: []},
+// export const enemies = [
+//     { name: "bear", hp: 15, attack: 0, defense: 0, loot: []},
+//     { name: "skeleton", hp: 10, attack: 0, defense: 0, loot: []},
+//     { name: null, hp: 0, attack: 0, defense: 0, loot: []},
 
-];
+// ];
 
 // export const characterRace =[
 //     {race: "Human", hp: 30, attack: ["Attack" 2], defense: 2},
