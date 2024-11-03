@@ -921,7 +921,7 @@ const questMain = () =>{
 
         visibility1()
 
-        reaction.innerText = `"Thank you again Adventurer` 
+        reaction.innerText = `"Thank you again Adventurer"` 
 
         storyImg.style.backgroundImage = `url(./images/Inngirl.jpg)`
 
@@ -1210,7 +1210,7 @@ const findGrave = () => {
         storyPrompt.innerText = "You should head back to the widow\n for your reward"
         
         choice1Btn.innerText = ""
-        choice2Btn.innerText = "leave"
+        choice2Btn.innerText = "Leave"
         choice3Btn.innerText = ""
 
        
