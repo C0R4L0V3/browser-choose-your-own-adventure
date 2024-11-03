@@ -127,27 +127,26 @@ const initClose = (event, idx) => {
         }  
         else if (charsPicked === true && weapPicked === false) {
             weapHandler(idx)
-            pickArm()
-         
-                
+            pickArm()     
         }
         else if(weapPicked == true && charComplete === false){
             armHandler(idx)
             charComplete = true 
-
-            advenStart() 
             controller.abort()
+            advenStart() 
         }
-
     }
+
 
 // ============== Game Over ============
 
 const gameOver = () => {
 
+    visibility1()
+
     storyPrompt.innerText - " Try Again?"
 
-    visibility1()
+    choice2Btn.innerText = " Restart"
 
     choice2Btn.addEventListener(()=>{
         location.reload()
@@ -194,24 +193,28 @@ const battle = (fight) => {
             firstMove = randomDice(1, 7)
             console.log(mob)
                 if(firstMove > 3){
-                    mob.fighting = true
+                    // mob.fighting = true
                     playerTurn = true
-                    if (mob === 0){
-                        encounterBear()
-                    }
-                    else if (mob === 1){
-                        encounterSkel()
-                    }
+                    evalPhase()
+                    // if (mob === 0){
+                    //     encounterBear()
+                    // }
+                    // else if (mob === 1){
+                    //     encounterSkel()
+                    // }
                 }   
                 else {
                     playerTurn = false
-                    if (mob === 0){
-                        encounterBear()
-                    }
-                    else if (mob === 1){
-                        encounterSkel()
-                    } 
+                    evalPhase()
+                    // playerTurn = false
+                    // if (mob === 0){
+                    //     encounterBear()
+                    // }
+                    // else if (mob === 1){
+                    //     encounterSkel()
+                    // } 
                 }
+                mob.fighting = true
         }
         else if (fight.target === choice3Btn){
             enemyImg.style.visibility = "hidden"
@@ -224,41 +227,40 @@ const battle = (fight) => {
     })
 }
 
-const evalPhase = () => {
-    game.enemies.forEach((mob)=>{
-        if(game.character.hp < 1 && playerTurn === true ){
+// const evalPhase = () => {
+    // game.enemies.forEach((mob)=>{
+    //     if(game.character.hp < 1 && playerTurn === true ){
             
-            game.character.attack = 0
-            userAtt.innerText = "Attack: " + 0  // adjust and displays values
+    //         game.character.attack = 0
+    //         userAtt.innerText = "Attack: " + 0  // adjust and displays values
 
-            game.character.defense = 0
-            userDef.innerText = "Defence: " + 0
+    //         game.character.defense = 0
+    //         userDef.innerText = "Defence: " + 0
 
-            turn()
+    //     }
+    //     else if (mob.hp < 1 && mob.fighting === true && playerTurn == false){  
+    //     }
+    //     else if (game.character.hp >= 1 && playerTurn === true){   
+    //     }  
+    //     else if (mob.hp >= 1 && playerTurn === false){
+        
+    //     }
+
+//         turn()
+//     })
+// }
+
+
+const evalPhase = () => {
+
+    game.enemies.forEach((mob) =>{
+        if(mob === 0 && mob.encountered === true && mob.defeated === false){
+            encounterBear() 
         }
-        else if (mob.hp < 1 && playerTurn == false){
-            mob.fighting = false
-            mob.defeated = true
-            turn()
-        }
-        else if (game.character.hp >= 1 && playerTurn === true){
-           turn()
-        }  
-        else if (mob.hp >= 1 && playerTurn === false){
-            turn()
-
+        else if (mob === 1 && mob.encountered === true && mob.defeated === false){
+            encounterSkel() 
         }
     })
-}
-
-
-const turn = () => {
-    if(mob === 0 && mob.encountered === true && mob.defeated === false){
-        encounterBear() //--bear win scene
-    }
-    else if (mob === 1 && mob.encountered === true && mob.defeated === false){
-        encounterSkel() //-- skeleton win scene
-    }
 }
 
 
@@ -272,19 +274,26 @@ const playerDefend = () => {
 }
 
 const playerAttack = () => {
-    damage = (randomDice(1, 9) + game.character.attack) - mob.defense //<<-- damage total
-    mob.hp -= damage
-        if(mob.hp < 0) {
-            mob.hp = 0
+
+    game.enemies.forEach((mob) =>{
+        if (mob.fighting === true){
+            damage = (randomDice(1, 9) + game.character.attack) - mob.defense //<<-- damage total
+            mob.hp -= damage
+                if(mob.hp < 0) {
+                    mob.hp = 0
+                }
+            reaction.innerText = `${mob.name} took ${damage} damage!` //<<-- changes the prompt
+            enemyHP.innerText ="HP: " + mob.hp//-- changes enemy hp display
         }
-    reaction.innerText = `${mob.name} took ${damage} damage!` //<<-- changes the prompt
-    enemyHP.innerText ="HP: " + mob.hp//-- changes enemy hp display
+    })
 }
 
-const playerTurnHandler = () => {
+const playerTurnHandler = (player) => {
+
+    visibility3()
 
 
-    if (choice1Btn.innerText === `Attack`){     //<<--- attack choice
+    if (player.target === choice1Btn){     //<<--- attack choice
 
         game.enemies.forEach((mob)=>{ //<<-- loops through enemy array
                 if(playerTurn === true && mob.fighting === true){     //<<---determines which mob being faces
@@ -299,7 +308,8 @@ const playerTurnHandler = () => {
             })
 
         }
-    else if (playerTurn === true && choice2Btn.innerText === `Heal`){ //-- handles healing choice
+
+    else if (playerTurn === true && player.target === choice2Btn){ //-- handles healing choice
 
         if (game.character.race === "Human"){   //<<-- determines picked race for hp values
 
@@ -307,16 +317,20 @@ const playerTurnHandler = () => {
                 game.character.hp += randomDice(1, 9)
 
                 reaction.innerText = `You recovered some HP`
-                userHP.innerText = game.character.hp 
+                userHP.innerText ="HP: " + game.character.hp 
 
                 if (game.character.hp > 35){    //<<-- if healing exceeds race max, adjusts the hp back to max
                     game.character.hp = 35
-                    userHP.innerText = game.character.hp 
+                    userHP.innerText = "HP: " + game.character.hp 
                 }
             }
             else if (game.character.hp === 35){ //<<-- if hp is maxed invalidates option and loops back through
                 storyPrompt.innerText = "Invalid choice \n Please try again."
-                playerTurnHandler()
+                encounterSkel()
+
+                btns.forEach((btn) => {
+                    btn.removeEventListener('click', playerTurnHandler)
+                })
             }
         }
         else if (game.character.race === "Elf"){
@@ -325,41 +339,54 @@ const playerTurnHandler = () => {
                 game.character.hp += randomDice(1, 9)
 
                 reaction.innerText = `You recovered some HP`
-                userHP.innerText = game.character.hp 
+                userHP.innerText = "HP: " + game.character.hp 
 
                 if (game.character.hp > 30){
                     game.character.hp = 30
-                    userHP.innerText = game.character.hp 
+                    userHP.innerText = "HP: " + game.character.hp 
                 }
             }
             else if (game.character.hp === 30){
                 storyPrompt.innerText = "Invalid choice \n Please try again."
-                playerTurnHandler()
+               encounterSkel()
+
+               btns.forEach((btn) => {
+                btn.removeEventListener('click', playerTurnHandler)
+            })
             }
         }
+
         else if (game.character.race === "Dwarf"){
             if (game.character.hp < 40){
                 game.character.hp += randomDice(1, 9)
 
                 reaction.innerText = `You recovered some HP`
-                userHP.innerText = game.character.hp 
+                userHP.innerText ="HP: " + game.character.hp 
 
                 if (game.character.hp > 40){
                     game.character.hp = 40
-                    userHP.innerText = game.character.hp 
+                    userHP.innerText ="HP: " + game.character.hp 
                 }
             }
             else if (game.character.hp === 40){
                 storyPrompt.innerText = "Invalid choice \n Please try again."
-                playerTurnHandler()
+                encounterSkel()
+
+                btns.forEach((btn) => {
+                    btn.removeEventListener('click', playerTurnHandler)
+                })
             }
         }
     }
 
-    else if (playerTurn === true && choice3Btn.innerText === `Defend`){
+    else if (playerTurn === true && player.target === choice3Btn){
                     //-- increases defense stat for 1 turn
         playerDefend()
     }
+
+    btns.forEach((btn) => {
+        btn.removeEventListener('click', playerTurnHandler)
+    })
 
     playerTurn = false
     evalPhase()
@@ -383,28 +410,48 @@ const mobDefend = () => {
     reaction.innerText = `${mob.name}'s defense has gone up.`
 }
 
-const mobTurnHandler = () => {
+const mobTurnHandler= () => {
 
-   
+   visibility1()
+
     game.enemies.forEach((mob) => {
         if(mob.fighting === true){
             if (randomDice(1, 7) >= 4){
                 if(playerDefending === true){
-                 mobAttack()
-                game.character.defense /= 2
-                playerDefending = false
-                userDef.innerText = "Defense: " + game.character.defense
+                    damage = (randomDice(1, 9) + mob.attack) - game.character.defense
+                    game.character.hp -= damage
+                        if(game.character.hp < 0 ) {
+                            game.character.hp = 0
+                        }
+                    userHP.innerText = "HP: "+ game.character.hp
+                    reaction.innerText = `You took ${damage} damage`  
+                    game.character.defense /= 2
+                    playerDefending = false
+                    userDef.innerText = "Defense: " + game.character.defense
                 }
                 else{
-                    mobAttack()
-           
-                }   
-            } 
-            else {
-                mobDefend()
+                    damage = (randomDice(1, 9) + mob.attack) - game.character.defense
+                    game.character.hp -= damage
+                        if(game.character.hp < 0 ) {
+                            game.character.hp = 0
+                        }
+                    userHP.innerText = "HP: "+ game.character.hp
+                    reaction.innerText = `You took ${damage} damage`  
+                }
             }
-        }
+            else {
+                mobDefending = true
+                mob.defense *= 2
+                enemyDef.innerText = "Defense: " + mob.defense
+                reaction.innerText = `${mob.name}'s defense has gone up.`
+            }
+        }   
     })
+
+    btns.forEach((btn) => {
+        btn.removeEventListener('click', mobTurnHandler)
+    })
+    
     playerTurn = true
     evalPhase()
 }
@@ -499,23 +546,29 @@ const armHandler = (num) => {
     userDef.innerText = "Defense: " + game.character.defense;
 
     armorPicked = true;
+    console.log(armorPicked)
     
 }
 
 //================= Meadow Functions & Handler ======================
 
 const meadowHandler = (meadow) => {
+    console.log(meadow.target.innerText)
     if(meadow.target === choice1Btn){
         townDir()
     }
     else if(meadow.target === choice2Btn){
         oldChurchDir()
     }
-    // else if(meadow.target === choice3Btn){
-    //     forestDir()    
+    else if(meadow.target === choice3Btn){
+        forestDir()    
+    }
+
+    controller.abort()
     btns.forEach((btn)=> {
     btn.removeEventListener('click', meadowHandler)
     })
+    
 }
 
 
@@ -572,17 +625,22 @@ const townHandler = (town) => {
     if(town.target === choice1Btn){    
         innDir()
     }
+
     else if(town.target === choice2Btn){
         blackSmithDir()
     }
     else {
         meadowDir()
-    } 
+    }
+
+    controller.abort()
 
     btns.forEach((btn)=> {
     btn.removeEventListener('click', townHandler)
     })
-}
+} 
+
+
 
 const townDir = ()=> {
 
@@ -612,19 +670,22 @@ const innHandler = (innHand) => {
     console.log(innHand.target.innerText)
     if(innHand.target === choice1Btn){
         questMain()
-     
+
     }
     else if(innHand.target === choice2Btn){
         roomRent()
-   
-    
+
     }
     else {innHand.target === choice3Btn
         townDir()  
+
     }
+
+    controller.abort()
+
     btns.forEach((btn)=> {
         btn.removeEventListener('click', innHandler)
-    })
+        })
 }
 
 const innDir = () => {
@@ -653,16 +714,18 @@ const roomHandler = (room) => {
     console.log(room.target.innerText)
     if(room.target === choice1Btn){
         ignoreInn()
+
     }
     else if(room.target === choice3Btn){
         choice2Btn.style.visibility = "visible"
         innDir()
     }
+
+    controller.abort()
+    
     btns.forEach((btn) => {
         btn.addEventListener('click', roomHandler)
     })
-    
-
 } 
 
 const roomRent = () => {
@@ -685,6 +748,8 @@ const roomRent = () => {
    }
 
 const ingnoreHandler = (ignore) => {
+
+    controller.abort()
 
     if(ignore.target === choice2Btn){
         location.reload()
@@ -725,79 +790,70 @@ const ignoreInn = () => {
 
 const questHandler = (quest) => {
 
-    if (questBegan === false){
-        console.log(quest.target.innerText)
-            if(quest.target === choice1Btn){
-                innDir()
-                btns.forEach((btn) => {
-                    btn.addEventListener('click', questHandler)
-                });
-                 choice2Btn.style.visibility = "visible"
-            }
-            else {
-                questBegan = true
-                questMain()
+    console.log(quest.target.innerText)
 
-                choice2Btn.style.visibility = "hidden"
-                btns.forEach((btn) => {
-                    btn.addEventListener('click', questHandler)
-                }) 
-                
-            }
+    if (questBegan === false){
+        if(quest.target === choice1Btn){
+            innDir()
+
+            btns.forEach((btn) => {
+                btn.removeEventListener('click', questHandler)
+            })
+        }
+        else if (quest.target === choice3Btn){
+            questBegan = true
+            questMain()
+        }
     } 
 
     else if (questBegan === true && questQued === false){
-        console.log(quest.target.innerText)
-            if(quest.target === choice1Btn){
-                innDir() 
-                btns.forEach((btn) => {
-                    btn.addEventListener('click', questHandler)
-                }) 
-                choice2Btn.style.visibility = "visible"
-            }
-
+        if(quest.target === choice1Btn){
             innDir() 
-            questQued = true
-            btns.forEach((btn) => {
-                btn.addEventListener('click', questHandler)
-            })
-             choice2Btn.style.visibility = "visible"
-  
+
+        } 
+        else if (quest.target == choice3Btn){
+            innDir() 
+
+        }
+        questQued = true
+        console.log(questQued);
+        btns.forEach((btn) => {
+            btn.removeEventListener('click', questHandler)
+        })
+
     } 
 
     else if (questQued === true && questCompleted === false){
-        
-                innDir()
+        innDir()
+        btns.forEach((btn) => {
+            btn.removeEventListener('click', questHandler)
+        })
 
-            btns.forEach((btn) => {
-                btn.addEventListener('click', questHandler)
-            })
-             choice2Btn.style.visibility = "visible"
     }
 
     else if (questCompleted === true && questCompletePost === false){
-        game.character.gold += 50
-        userGold.innerText = "Golc: " + game.character.gold
-        queryCompletePost = true
-        innDir()
-
+        
+        // if(quest.target === choice1Btn){
+        game.character.gold += 100
+        userGold.innerText = "Gold: " + game.character.gold
+        questCompletePost = true
+        innDir() 
+        
         btns.forEach((btn) => {
-            btn.addEventListener('click', questHandler)
+            btn.removeEventListener('click', questHandler)
         })
-         choice2Btn.style.visibility = "visible"
+
     }
 
     else if (questCompletePost === true){
-
-        innDir()
-            
+        // if(quest.target === choice2Btn){
+            innDir()
+        // }
         btns.forEach((btn) => {
-            btn.addEventListener('click', questHandler)
+            btn.removeEventListener('click', questHandler)
         })
-        choice1Btn.style.visibility = "visible"
-        choice3Btn.style.visibility = "visible"
-
     }
+    
 }
 
 const questMain = () =>{
@@ -842,10 +898,10 @@ const questMain = () =>{
         
         choice1Btn.innerText = "Leave me alone, you Wench! \n (Leave)"
         choice3Btn.innerText = "Not yet fair Maiden \n (Leave"
-       
+        
     }
 
-    else if (questCompleted === true && questCompletePost === faslse){
+    else if (questCompleted === true && questCompletePost === false){
 
         visibility2()
 
@@ -856,12 +912,12 @@ const questMain = () =>{
         storyPrompt.innerText = `"Have you taken my ring to my husband's grave?"`
 
 
-        choice1Btn.innerText = "Yes. Now pay up!\n(+50 Gold)\n(Leave)"
-        choice3Btn.innerText = "Yes. May your husband rest in peace\n(+50 Gold)\n(Leave"
+        choice1Btn.innerText = "Yes. Now pay up!\n(+100 Gold)\n(Leave)"
+        choice3Btn.innerText = "Yes. May your husband rest in peace\n(+100 Gold)\n(Leave"
 
     }
 
-    else if (queryCompletePost === true){
+    else if (questCompletePost === true){
 
         visibility1()
 
@@ -871,15 +927,21 @@ const questMain = () =>{
 
         storyPrompt.innerText = `"Safe travels!"`
 
+        choice2Btn.innerText = "Leave"
+        
     }
     btns.forEach((btn) => {
         btn.addEventListener('click', questHandler)
     })
+
 }
 
 //======================================= BLACK SMITH ===========================
 
 const blacksmithHandler = (smith) => {
+
+    console.log(smith.target.innerText);
+    
 
     if (smith.target === choice1Btn){
             if(game.character.gold >= 200 && game.character.race === "Dwarf"){
@@ -894,10 +956,11 @@ const blacksmithHandler = (smith) => {
                 notEnoughGoldBS()
             }
         }
-        else {
-            
+
+        else {    
             townDir()
         }
+
         btns.forEach((btn)=> {
             btn.removeEventListener('click', blacksmithHandler)
         })
@@ -927,6 +990,7 @@ const blackSmithDir = () => {
 const perkHandler = (perk) => {
 
     console.log(perk.target.innerText)
+
     if(perk.target === choice1Btn){
         if(game.character.gold >= 140){
             game.character.gold -= 140
@@ -965,7 +1029,9 @@ const dwarfPerk = () => {
 }
 
 const poorHandler = (poor) => {
+
     console.log(poor.target.innerText)
+
     if(poor.target === choice2Btn){
         choice2Btn.style.visibility = "visible"
         townDir()
@@ -993,7 +1059,9 @@ const notEnoughGoldBS = () => {
 };
 
 const ringHandler = (ring) => {
+
     console.log(ring.target.innerText)
+
     if(ring.target === choice2Btn){
     location.reload()
     }
@@ -1028,6 +1096,8 @@ const boughtRing = () => {
 
 
 const churchHandler = (church) => {
+    
+    console.log(church.target.innerText)
 
     if(church.target === choice1Btn && questQued === true && game.enemies[1].defeated === false){
         encounterSkel()  
@@ -1038,11 +1108,11 @@ const churchHandler = (church) => {
     else if (church.target === choice1Btn && questQued === false && game.enemies[1].defeated === false){
         encounterSkel() 
     }
-    else if (church.target === choice3Btn){
+    else if (church.target === choice2Btn){
         meadowDir()
     }
     btns.forEach((btn)=> {
-        btn.removeEventListener('click', charHandler)
+        btn.removeEventListener('click', churchHandler)
     })
 };
 
@@ -1063,7 +1133,7 @@ const oldChurchDir = () =>{
         choice3Btn.innerText = "Yeea....\nI dont think so \n (Leave)"
     }
     
-    else if(questQued === true && game.enemies[1].defeated === true){
+    else if(questQued === true && game.enemies[1].defeated === true && questCompleted === false){
 
         visibility2()
         
@@ -1091,7 +1161,7 @@ const oldChurchDir = () =>{
         choice3Btn.innerText = "Yeea....\nI dont think so \n (Leave)"
     }
 
-    else if (questQued === false && game.enemies[1].defeated === true || questCompleted == true){
+    else if (questQued === false && game.enemies[1].defeated === true || questCompleted === true){
 
         visibility1()
         
@@ -1099,7 +1169,7 @@ const oldChurchDir = () =>{
         
         storyImg.style.backgroundImage = `url(./images/oldchurch.jpg)`
         
-        storyPrompt.innerText = "Do you want to go further?"
+        storyPrompt.innerText = "There is nothing left of interest here."
         
       
         choice2Btn.innerText = "Why am I here?. (Leave)"
@@ -1111,7 +1181,47 @@ const oldChurchDir = () =>{
     })
 }
 
+const graveHandler = (grave) => {
 
+    console.log(grave.target.innerText)
+
+    questCompleted = true
+
+    if (grave.target === choice2Btn){
+        meadowDir()
+    }
+
+    btns.forEach((btn)=>{
+        btn.removeEventListener('click', graveHandler)
+    })
+
+}
+
+const findGrave = () => {
+
+    visibility1()
+
+        
+
+        reaction.innerText = `After searching for awhile,\nyou finally reach the tomb of the widow's husband \n you place the ring she gave you on the tomb.`
+
+        storyImg.style.backgroundImage = `url(./images/crypt.jpg)`
+        
+        storyPrompt.innerText = "You should head back to the widow\n for your reward"
+        
+        choice1Btn.innerText = ""
+        choice2Btn.innerText = "leave"
+        choice3Btn.innerText = ""
+
+       
+        btns.forEach((btn)=>{
+            btn.addEventListener('click', graveHandler)
+        })
+
+            console.log(questCompletePost)
+            console.log(questCompleted);
+            
+}
 
 
 const encounterSkel = () => {
@@ -1125,89 +1235,148 @@ const encounterSkel = () => {
     enemyDef.innerText = "Defense: " + game.enemies[1].defense
     
     storyImg.style.backgroundImage = `url(./images/churchinner.jpg)`
+
+    game.enemies.forEach((mob) =>{
     
-    if(game.enemies[1].fighting === false){
+        if(mob.fighting === false && mob.defeated === false){
 
-        visibility2()
+            visibility2()
 
-        game.enemies[1].encountered = true
+            game.enemies[1].encountered = true
 
-        storyPrompt.innerText = "Begin Battle?"
+            storyPrompt.innerText = "Begin Battle?"
 
-        choice1Btn.innerText = "Fight"
-        choice3Btn.innerText = "Flee"
+            choice1Btn.innerText = "Fight"
+            choice3Btn.innerText = "Flee"
 
-            if(questQued === true && game.enemies[1].defeated === false){
+                if(questQued === true && game.enemies[1].defeated === false){
 
-                reaction.innerText = `Apon entering the crypt, you encountered a re-animated skeleton.\n You must defeat it before you can continue on.`
-            }
-            else if (questQued === false && game.enemies[1].defeated === false){
-                reaction.innerText = `Apon entering the crypt You've encountered a re-animated skeleton.`
-            }
+                    reaction.innerText = `Apon entering the crypt, you encountered a re-animated skeleton.\n You must defeat it before you can continue on.`
+                }
+                else if (questQued === false && game.enemies[1].defeated === false){
+                    reaction.innerText = `Apon entering the crypt You've encountered a re-animated skeleton.`
+                }
 
-        btns.forEach((btn) => {
-            btn.addEventListener('click', battle)
-        })
-    }
-    else if (game.enemies[1].fighting === true && playerTurn === true) {
+            btns.forEach((btn) => {
+                btn.addEventListener('click', battle)
+            })
+        }
+        else if (mob.fighting === true && playerTurn === true) {
+        
+            visibility2()
+        
+            storyPrompt.innerText = `Your Move`
     
-        visibility3()
+            choice1Btn.style.visibility = "Attack"
+            choice2Btn.innerText = "Heal"
+            choice3Btn.style.visibility = "Defend"
 
-        storyPrompt.innerText = `${mob.name}'s Move`
-       
-    
-        choice1Btn.style.visibility = "Attack"
-        choice2Btn.innerText = "Heal"
-        choice3Btn.style.visibility = "Defend"
-    
-        btns.forEach((btn) => {
+        
+            btns.forEach((btn) => {
                 btn.addEventListener('click', playerTurnHandler)
             })       
-    }
-    else if (game.enemies[1].fighting === true && playerTurn === false) {
-    
-      visibility3()
+        }
+        else if (mob.fighting === true && playerTurn === false) {
+        
+        visibility3()
 
-        storyPrompt.innerText = `${game.enemies[1].name}'s Move`
+            storyPrompt.innerText = `${mob.name}'s Move`
 
-    
-        choice1Btn.style.visibility = "hidden"
-        choice2Btn.innerText = "Next"
-        choice3Btn.style.visibility = "hidden"
-    
-        btns.forEach((btn) => {
+        
+            choice1Btn.style.visibility = "hidden"
+            choice2Btn.innerText = "Next"
+            choice3Btn.style.visibility = "hidden"
+
+            btns.forEach((btn) => {
                 btn.addEventListener('click', mobTurnHandler)
             })       
-    }
-    else if (game.character.hp < 1 && playerTurn === true) { //skeleton defeat
+        }
+        else if(mob.hp === 0 && playerTurn == false){
 
-        reaction.innerText = " Oh No! You failed to defeat the skeleton!\n you are forever apart of the undead army. "
+            visibility1()
 
-        storyImg.style.backgroundImage = 'url(./images/undeadarmy.jpg)'
+            mob.fighting = false 
+            mob.defeated = true
+
+            reaction.innerText = " You have laid this to rest."
+
+            storyImg.style.backgroundImage = 'url(./images/churchinner.jpg)'
+
+                if(questQued === true){
+                    storyPrompt.innerText - " you continue you search for the grave"
         
-        gameOver()
-    }
+                    choice2Btn.innerText = " continue"
+                }
+                else {
+                    storyPrompt.innerText - " You see nothing of worth"
+                
+                    choice2Btn.innerText = " Leave"
+                }
+
+            btns.forEach((btn) => {
+                btn.addEventListener('click', churchHandler)
+            })
+        }
+
+        else if (game.character.hp === 0 && playerTurn === true) { //skeleton defeat
+            visibility1()
+
+            game.character.attack = 0
+            userAtt.innerText = "Attack: " + 0  // adjust and displays values
+
+            game.character.defense = 0
+            userDef.innerText = "Defence: " + 0
+
+
+            reaction.innerText = " Oh No! You failed to defeat the skeleton!\n you are forever apart of the undead army. "
+
+            storyImg.style.backgroundImage = 'url(./images/undeadarmy.jpg)'
+            
+            storyPrompt.innerText - " Try Again?"
+        
+            choice2Btn.innerText = " Restart"
+
+            gameOver()
+        }
+    })
 
 }
 
 
-// reaction.innerText = " Oh No! You failed to defeat the skeleton!\n you are forever apart of the undead army. "
+const forestDir = () => {
+    
+    visibility1()
 
-// storyImg.style.backgroundImage = 'url(./images/undeadarmy.jpg)'
-// storyPrompt.innerText - " Try Again?"
+        reaction.innerText = `You find yourself in an enchated forest.`
 
-// choice1Btn.style.visibility = " hidden"
-// choice2Btn.style.visibility = " visible"
-// choice1Btn.style.visibility = " hidden"
+        storyImg.style.backgroundImage = `url(./images/forest.jpg)`
+        
+        storyPrompt.innerText = "It's rather quite pieceful"
+        
+        choice1Btn.innerText = ""
+        choice2Btn.innerText = "leave"
+        choice3Btn.innerText = ""
 
-// choice2Btn.addEventListener(()=>{
-//     location.reload()
+       
+        btns.forEach((btn)=>{
+            btn.addEventListener('click', forestHandler)
+        })
+
+}
+
+const forestHandler = (forest) => {
+
+    console.log(forest.target.innerText);
+    
+    if (forest.target === choice2Btn){
+        meadowDir()
+    }
+    btns.forEach((btn)=>{
+        btn.removeEventListener('click', forestHandler)
+    })
+}
 
 
-
-// const forestDir = () => {
-
-// }
 
 
 
@@ -1254,6 +1423,48 @@ const encounterSkel = () => {
 
 
 //=================== Weapon Fuctions & Handler =====================
+
+
+// const evalPhase = () => {
+    // game.enemies.forEach((mob)=>{
+    //     if(game.character.hp < 1 && playerTurn === true ){
+            
+    //         game.character.attack = 0
+    //         userAtt.innerText = "Attack: " + 0  // adjust and displays values
+
+    //         game.character.defense = 0
+    //         userDef.innerText = "Defence: " + 0
+
+    //     }
+    //     else if (mob.hp < 1 && mob.fighting === true && playerTurn == false){  
+    //     }
+    //     else if (game.character.hp >= 1 && playerTurn === true){   
+    //     }  
+    //     else if (mob.hp >= 1 && playerTurn === false){
+        
+    //     }
+
+//         turn()
+//     })
+// }
+
+// reaction.innerText = " Oh No! You failed to defeat the skeleton!\n you are forever apart of the undead army. "
+
+// storyImg.style.backgroundImage = 'url(./images/undeadarmy.jpg)'
+// storyPrompt.innerText - " Try Again?"
+
+// choice1Btn.style.visibility = " hidden"
+// choice2Btn.style.visibility = " visible"
+// choice1Btn.style.visibility = " hidden"
+
+// choice2Btn.addEventListener(()=>{
+//     location.reload()
+
+
+
+// const forestDir = () => {
+
+// }
 
 // const pickWeap = ()=>{
 
