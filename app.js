@@ -10,6 +10,7 @@ const userDef = document.querySelector("#userDef");
 const userGold = document.querySelector("#userGold")
 
 //-- query selector for Enemy Stats --
+const enemyStats = document.querySelector("#enemyStats")
 const enemyName = document.querySelector("#enemyName");
 const enemyHP = document.querySelector("#enemyHP")
 const enemyAtt = document.querySelector("#enemyAtt");
@@ -87,10 +88,95 @@ let questCompleted = false
 let questCompletePost = false
 
 let playerTurn = true
-let playerDefend = false
+let playerDefending = false
+
+let mobDefending = false
 
 
-//=============== Functions ===============
+
+//=============== Game Start & Char Creation ===============
+
+const controller = new AbortController()    //imported function
+const {signal} = controller
+
+const init = () => {
+      
+    btns.forEach((btn, idx) => {
+        btn.addEventListener('click',(event)=>{
+        initClose(event, idx)
+        }, {signal})   
+    
+    })
+}
+
+init()
+
+const initClose = (event, idx) => {
+    console.log (idx)
+        if(event.target.innerText === 'Play' && startGame === false){
+            startGame = true
+            console.log(startGame)
+            pickChar()
+
+        }
+        else if (startGame === true && charsPicked === false){
+            charHandler(idx)
+            console.log(charsPicked)
+            pickWeap()
+  
+        }  
+        else if (charsPicked === true && weapPicked === false) {
+            weapHandler(idx)
+            pickArm()
+         
+                
+        }
+        else if(weapPicked == true && charComplete === false){
+            armHandler(idx)
+            charComplete = true 
+
+            advenStart() 
+            controller.abort()
+        }
+
+    }
+
+// ============== Game Over ============
+
+const gameOver = () => {
+
+    storyPrompt.innerText - " Try Again?"
+
+    visibility1()
+
+    choice2Btn.addEventListener(()=>{
+        location.reload()
+    })
+
+}
+
+
+//===========button visiblity =====
+
+const visibility1 = () => {
+    choice1Btn.style.visibility = "hidden"
+    choice2Btn.style.visibility = "visible"
+    choice3Btn.style.visibility = "hidden"
+}
+
+const visibility2 = () => {
+    choice1Btn.style.visibility = "visible"
+    choice2Btn.style.visibility = "hidden"
+    choice3Btn.style.visibility = "visible"
+}
+
+const visibility3 = () => {
+    choice1Btn.style.visibility = "visible"
+    choice2Btn.style.visibility = "visible"
+    choice3Btn.style.visibility = "visible"
+}
+
+//====== Combat Logic ================
 
 //Dice generator, can be used for damage or healing
 
@@ -100,13 +186,6 @@ const randomDice = (min, max) => {
     return Math.floor(Math.random() * (maxDice + minDice) + minDice)
 };
 
-
-
-
-
-//====== Combat Logic
-
-
 const battle = (fight) => {
 
     game.enemies.forEach((mob)=>{
@@ -115,24 +194,28 @@ const battle = (fight) => {
             firstMove = randomDice(1, 7)
             console.log(mob)
                 if(firstMove > 3){
-                    if(mob === 0){
-                        mob.fighting = true
-                        playerTurn = true
+                    mob.fighting = true
+                    playerTurn = true
+                    if (mob === 0){
                         encounterBear()
-                    }   
+                    }
                     else if (mob === 1){
-                        mob.fighting = true
-                        playerTurn = true
                         encounterSkel()
                     }
-                }
+                }   
                 else {
                     playerTurn = false
-                    mob.fighting = true
-                    encounterSkel()   
+                    if (mob === 0){
+                        encounterBear()
+                    }
+                    else if (mob === 1){
+                        encounterSkel()
+                    } 
                 }
         }
         else if (fight.target === choice3Btn){
+            enemyImg.style.visibility = "hidden"
+            enemyStats.style.visibility = "hidden"
             oldChurchDir()  
         }
         btns.forEach((btn) => {
@@ -145,29 +228,58 @@ const evalPhase = () => {
     game.enemies.forEach((mob)=>{
         if(game.character.hp < 1 && playerTurn === true ){
             
-            if(mob === 0 && mob.encountered === true && mob.defeated === false){
-                bearDeath() //--bear death scene
-            }
-            else if (mob === 1 && mob.encountered === true && mob.defeated === false){
-                skelDeath() //-- skeleton death scene
-            }
+            game.character.attack = 0
+            userAtt.innerText = "Attack: " + 0  // adjust and displays values
+
+            game.character.defense = 0
+            userDef.innerText = "Defence: " + 0
+
+            turn()
         }
         else if (mob.hp < 1 && playerTurn == false){
-            if(mob === 0 && mob.encountered === true && mob.defeated === false){
-                bearWin() //--bear win scene
-            }
-            else if (mob === 1 && mob.encountered === true && mob.defeated === false){
-                skelWin() //-- skeleton win scene
-            }
+            mob.fighting = false
+            mob.defeated = true
+            turn()
+        }
+        else if (game.character.hp >= 1 && playerTurn === true){
+           turn()
+        }  
+        else if (mob.hp >= 1 && playerTurn === false){
+            turn()
 
         }
     })
-
 }
 
 
+const turn = () => {
+    if(mob === 0 && mob.encountered === true && mob.defeated === false){
+        encounterBear() //--bear win scene
+    }
+    else if (mob === 1 && mob.encountered === true && mob.defeated === false){
+        encounterSkel() //-- skeleton win scene
+    }
+}
 
-//player turn handler
+
+//==============player turn handler================
+
+const playerDefend = () => {
+    playerDefending = true
+    game.character.defense *= 2
+    userDef.innerText = "Defense: " + game.character.defense
+    reaction.innerText = `You are bracing for an attack! \n defence increased to ${game.character.defense}`
+}
+
+const playerAttack = () => {
+    damage = (randomDice(1, 9) + game.character.attack) - mob.defense //<<-- damage total
+    mob.hp -= damage
+        if(mob.hp < 0) {
+            mob.hp = 0
+        }
+    reaction.innerText = `${mob.name} took ${damage} damage!` //<<-- changes the prompt
+    enemyHP.innerText ="HP: " + mob.hp//-- changes enemy hp display
+}
 
 const playerTurnHandler = () => {
 
@@ -176,13 +288,13 @@ const playerTurnHandler = () => {
 
         game.enemies.forEach((mob)=>{ //<<-- loops through enemy array
                 if(playerTurn === true && mob.fighting === true){     //<<---determines which mob being faces
-                damage = (randomDice(1, 9) + game.character.attack) - mob.defense //<<-- damge total
-                mob.hp -= damage
-                    if(mob.hp < 0) {
-                        mob.hp = 0
-                    }
-                    reaction.innerText = `${mob.name} took ${damage} damage!` //<<-- changes the prompt
-                    enemyHP.innerText ="HP: " + mob.hp//-- changes enemy hp display
+                    if (mobDefending = true)
+                        playerAttack()
+                        mob.defense /= 2
+                        mobDefending = false
+                        enemyDef.innerText = "Defense: " + mob.defense
+                } else {
+                    playerAttack()
                 }
             })
 
@@ -246,13 +358,7 @@ const playerTurnHandler = () => {
 
     else if (playerTurn === true && choice3Btn.innerText === `Defend`){
                     //-- increases defense stat for 1 turn
-        playerDefend = true
-        game.character.defense *= 2
-
-        reaction.innerText = `You are bracing for an attack! \n defence increased to ${game.character.defense}`
-
-        userDef.innerText = game.character.defense
-
+        playerDefend()
     }
 
     playerTurn = false
@@ -260,8 +366,47 @@ const playerTurnHandler = () => {
 
 }
 
-const mobTurn = () => {
-    console.log("test")
+const mobAttack = () => {
+    damage = (randomDice(1, 9) + mob.attack) - game.character.defense
+    game.character.hp -= damage
+        if(game.character.hp < 0 ) {
+            game.character.hp = 0
+        }
+    userHP.innerText = "HP: "+ game.character.hp
+    reaction.innerText = `You took ${damage} damage`  
+}
+
+const mobDefend = () => {
+    mobDefending = true
+    mob.defense *= 2
+    enemyDef.innerText = "Defense: " + mob.defense
+    reaction.innerText = `${mob.name}'s defense has gone up.`
+}
+
+const mobTurnHandler = () => {
+
+   
+    game.enemies.forEach((mob) => {
+        if(mob.fighting === true){
+            if (randomDice(1, 7) >= 4){
+                if(playerDefending === true){
+                 mobAttack()
+                game.character.defense /= 2
+                playerDefending = false
+                userDef.innerText = "Defense: " + game.character.defense
+                }
+                else{
+                    mobAttack()
+           
+                }   
+            } 
+            else {
+                mobDefend()
+            }
+        }
+    })
+    playerTurn = true
+    evalPhase()
 }
 
 
@@ -357,59 +502,6 @@ const armHandler = (num) => {
     
 }
 
-//=============== EventListeners ===============
-
-//-- Game Start Char Creation --
-
-//there is a minor bug here keeping the event listener always active
-
-const controller = new AbortController()    //imported function
-const {signal} = controller
-
-const init = () => {
-      
-    btns.forEach((btn, idx) => {
-        btn.addEventListener('click',(event)=>{
-        initClose(event, idx)
-        }, {signal})   
-    
-    })
-}
-
-init()
-
-const initClose = (event, idx) => {
-    console.log (idx)
-        if(event.target.innerText === 'Play' && startGame === false){
-            startGame = true
-            console.log(startGame)
-            pickChar()
-
-        }
-        else if (startGame === true && charsPicked === false){
-            charHandler(idx)
-            console.log(charsPicked)
-            pickWeap()
-  
-        }  
-        else if (charsPicked === true && weapPicked === false) {
-            weapHandler(idx)
-            pickArm()
-         
-                
-        }
-        else if(weapPicked == true && charComplete === false){
-            armHandler(idx)
-            charComplete = true 
-
-            advenStart() 
-            controller.abort()
-        }
-
-    }
-
-//thank you Ian for explain on how to do remove listener events
-
 //================= Meadow Functions & Handler ======================
 
 const meadowHandler = (meadow) => {
@@ -428,6 +520,8 @@ const meadowHandler = (meadow) => {
 
 
 const advenStart = () => {
+
+    visibility3()
 
     userGold.innerText = "Gold: "+ game.character.gold
 
@@ -449,6 +543,8 @@ const advenStart = () => {
 }
 
 const meadowDir = () => {
+
+    visibility3()
 
     reaction.innerText = "You find yourself back in the meadows. There is a town, an old abandoned church and a forest nearby"
     // reaction.style.fontSize = "16px";
@@ -489,6 +585,8 @@ const townHandler = (town) => {
 }
 
 const townDir = ()=> {
+
+    visibility3()
 
     reaction.innerText = " You are in the small town of a HoneyWood. There is an Inn and a BlackSmith in town."
 
@@ -531,9 +629,7 @@ const innHandler = (innHand) => {
 
 const innDir = () => {
 
-    choice1Btn.style.visibility = "visible"
-    choice2Btn.style.visibility = "visible"
-    choice3Btn.style.visibility = "visible"
+    visibility3()
 
     reaction.innerText = "As you enter the Inn it is busy, even durning the day. You see a woman who is distrought, perhaps she need some help? You could also rent a room and stay in town for a bit"
 
@@ -571,7 +667,7 @@ const roomHandler = (room) => {
 
 const roomRent = () => {
 
-    choice2Btn.style.visibility = "hidden"
+    visibility2()
 
     reaction.innerText = "As you approach the Innkeeper, you get a weird feeling"
 
@@ -589,6 +685,7 @@ const roomRent = () => {
    }
 
 const ingnoreHandler = (ignore) => {
+
     if(ignore.target === choice2Btn){
         location.reload()
         }  
@@ -597,8 +694,7 @@ const ingnoreHandler = (ignore) => {
 
 const ignoreInn = () => {
 
-    choice1Btn.style.visibility = "hidden"
-    choice3Btn.style.visibility = "hidden"
+   visibility1()
 
     reaction.innerText = "Listening to you instincts is one of the first rules to being an Adventurer. And unfortunatly for you, you wont be able to learn form this mistake."
 
@@ -707,23 +803,21 @@ const questHandler = (quest) => {
 const questMain = () =>{
 
     if (questBegan === false){
-    choice1Btn.style.visibility = "visible"
-    choice2Btn.style.visibility = "hidden"
-    choice3Btn.style.visibility = "visible"
+        visibility2()
 
-    reaction.innerText = 'The woman notices you approaching. and she says, "Oh! you wouldnt happen to be an Adventurer? I could really use your help with something involing the old church.'
+        reaction.innerText = 'The woman notices you approaching. and she says, "Oh! you wouldnt happen to be an Adventurer? I could really use your help with something involing the old church.'
 
-    storyImg.style.backgroundImage = `url(./images/Inngirl.jpg)`
+        storyImg.style.backgroundImage = `url(./images/Inngirl.jpg)`
 
-    storyPrompt.innerText = "Will you help me?"
+        storyPrompt.innerText = "Will you help me?"
 
-    choice1Btn.innerText = "Leave me alone, you Wench! \n (Leave)"
-    choice3Btn.innerText = "Of course fair maiden!\n (Accept Quest)"
+        choice1Btn.innerText = "Leave me alone, you Wench! \n (Leave)"
+        choice3Btn.innerText = "Of course fair maiden!\n (Accept Quest)"
 
     }
     else if (questBegan === true && questQued === false){
 
-      
+        visibility2()
 
         reaction.innerText = `"Oh Thank you Adventurer! I promise to pay you handsomely!"`
 
@@ -738,7 +832,7 @@ const questMain = () =>{
     }
     else if (questQued === true && questCompleted === false){
 
-        choice2Btn.style.visibility = "hidden"
+        visibility2()
 
         reaction.innerText = `"Oh Adventurer you've returned!` 
 
@@ -753,7 +847,7 @@ const questMain = () =>{
 
     else if (questCompleted === true && questCompletePost === faslse){
 
-        choice2Btn.style.visibility = "hidden"
+        visibility2()
 
         reaction.innerText = `"Oh Adventurer you've returned!` 
 
@@ -768,8 +862,8 @@ const questMain = () =>{
     }
 
     else if (queryCompletePost === true){
-        choice1Btn.style.visibility = "hidden"
-        choice3Btn.style.visibility = "hidden"
+
+        visibility1()
 
         reaction.innerText = `"Thank you again Adventurer` 
 
@@ -786,6 +880,7 @@ const questMain = () =>{
 //======================================= BLACK SMITH ===========================
 
 const blacksmithHandler = (smith) => {
+
     if (smith.target === choice1Btn){
             if(game.character.gold >= 200 && game.character.race === "Dwarf"){
                 dwarfPerk()
@@ -800,21 +895,17 @@ const blacksmithHandler = (smith) => {
             }
         }
         else {
-            choice2Btn.style.visibility = "visible"
+            
             townDir()
         }
         btns.forEach((btn)=> {
             btn.removeEventListener('click', blacksmithHandler)
         })
-     }
+}
 
 const blackSmithDir = () => {
 
-    btns.forEach((btn)=> {
-        btn.removeEventListener('click', (event))
-        })
-
-    choice2Btn.style.visibility = "hidden"
+    visibility2()
 
     reaction.innerText = "As you enter the Blacksmith's shop, the smell of smoke and the sounds of metal clashing fills the air. The shop master is a Dwarf. And he has a ring for sale."
 
@@ -847,7 +938,7 @@ const perkHandler = (perk) => {
         }           
     }
     else {
-        choice2Btn.style.visibility = "visible"
+        
         townDir()  
     }
     btns.forEach((btn)=> {
@@ -857,6 +948,8 @@ const perkHandler = (perk) => {
 }
 
 const dwarfPerk = () => {
+
+    visibility2()
 
     reaction.innerText = `"Ah a fellow kinsmen! Rare in these parts! I'll give it to you for 30% off!"`   
     storyImg.style.backgroundImage = `url(./images/blacksmith.jpg)`
@@ -880,20 +973,18 @@ const poorHandler = (poor) => {
     btns.forEach((btn)=> {
         btn.removeEventListener('click', poorHandler)
     }) 
-    choice1Btn.style.visibility = "visible"
-    choice3Btn.style.visibility = "visible"
+
 };
 
 const notEnoughGoldBS = () => {
+
+    visibility1()
 
     reaction.innerText = `"GET OUT OF HERE YOU CHEAPSKATE!"`
     storyImg.style.backgroundImage = `url(./images/blacksmith.jpg)`
     storyPrompt.innerText = "You're being kick out!"
     
-    choice1Btn.style.visibility = "hidden"
-    choice2Btn.style.visibility = "visible"
     choice2Btn.innerText = "Leave"
-    choice3Btn.style.visibility = "hidden"
     
     btns.forEach((btn) => {
         btn.addEventListener('click', poorHandler)
@@ -910,14 +1001,15 @@ const ringHandler = (ring) => {
 
 const boughtRing = () => {
 
+    visibility1()
+
     reaction.innerText = `WOW, it was Ring of WINNING?! What kinda dumb dwarf would give this away for so cheap!?`
     storyImg.style.backgroundImage = `url(./images/ring.jpg)`
     storyPrompt.innerText = "You won! \n Play Again?"
     
-    choice1Btn.style.visibility = "hidden"
-    choice2Btn.style.visibility = "visible"
+
     choice2Btn.innerText = "Play Again?"
-    choice3Btn.style.visibility = "hidden"
+   
 
     btns.forEach((btn) => {
         btn.addEventListener('click', (event) =>{
@@ -952,7 +1044,6 @@ const churchHandler = (church) => {
     btns.forEach((btn)=> {
         btn.removeEventListener('click', charHandler)
     })
-    choice2Btn.style.visibility = "visible"
 };
 
 
@@ -960,7 +1051,8 @@ const oldChurchDir = () =>{
 
     if(questQued === true && game.enemies[1].defeated === false){
 
-        
+        visibility2()
+
         reaction.innerText = `You have reached the old church the woman from the Inn spoke of. \nAside from the lack of upkeep on these hollow ground, an eariness lingers.\n You may want to prepare yourself for anything`
         
         storyImg.style.backgroundImage = `url(./images/oldchurch.jpg)`
@@ -968,12 +1060,12 @@ const oldChurchDir = () =>{
         storyPrompt.innerText = "Do you want to go further?"
         
         choice1Btn.innerText = "Explore and look for the grave"
-        choice2Btn.style.visibility = "hidden"
         choice3Btn.innerText = "Yeea....\nI dont think so \n (Leave)"
     }
     
     else if(questQued === true && game.enemies[1].defeated === true){
 
+        visibility2()
         
         reaction.innerText = `You have reached the old church the woman from the Inn spoke of. \n You've already cleansed these hollow grounds.`
         
@@ -982,13 +1074,13 @@ const oldChurchDir = () =>{
         storyPrompt.innerText = "Do you want to go further?"
         
         choice1Btn.innerText = "Explore and look for the grave"
-        choice2Btn.style.visibility = "hidden"
         choice3Btn.innerText = "I got better things to do. (Leave)"
     }
 
     else if (questQued === false && game.enemies[1].defeated === false){
 
-        
+        visibility2()
+
         reaction.innerText = `You have reached the old church and \naside from the lack of upkeep on these hollowed ground, an eariness lingers.\n You may want to prepare yourself for anything`
         
         storyImg.style.backgroundImage = `url(./images/oldchurch.jpg)`
@@ -996,12 +1088,12 @@ const oldChurchDir = () =>{
         storyPrompt.innerText = "Do you want to go further?"
         
         choice1Btn.innerText = "Explore old church"
-        choice2Btn.style.visibility = "hidden"
         choice3Btn.innerText = "Yeea....\nI dont think so \n (Leave)"
     }
 
     else if (questQued === false && game.enemies[1].defeated === true || questCompleted == true){
 
+        visibility1()
         
         reaction.innerText = `You have reached the old church and \n You've already cleansed these hollowed grounds.`
         
@@ -1009,9 +1101,9 @@ const oldChurchDir = () =>{
         
         storyPrompt.innerText = "Do you want to go further?"
         
-        choice1Btn.style.visibility = "hidden"
+      
         choice2Btn.innerText = "Why am I here?. (Leave)"
-        choice3Btn.style.visibility = "hidden"
+        
     }
 
     btns.forEach((btn)=>{
@@ -1024,6 +1116,7 @@ const oldChurchDir = () =>{
 
 const encounterSkel = () => {
 
+    enemyStats.style.visibility="visible"
     enemyImg.style.visibility = "visible"
     enemyImg.style.backgroundImage = `url(./images/skeleton.png)`
     enemyName.innerText = "Name: " + game.enemies[1].name
@@ -1032,10 +1125,10 @@ const encounterSkel = () => {
     enemyDef.innerText = "Defense: " + game.enemies[1].defense
     
     storyImg.style.backgroundImage = `url(./images/churchinner.jpg)`
-
-    choice2Btn.style.visibility = "hidden"
     
     if(game.enemies[1].fighting === false){
+
+        visibility2()
 
         game.enemies[1].encountered = true
 
@@ -1043,8 +1136,6 @@ const encounterSkel = () => {
 
         choice1Btn.innerText = "Fight"
         choice3Btn.innerText = "Flee"
-
-    
 
             if(questQued === true && game.enemies[1].defeated === false){
 
@@ -1059,32 +1150,42 @@ const encounterSkel = () => {
         })
     }
     else if (game.enemies[1].fighting === true && playerTurn === true) {
+    
+        visibility3()
 
-
-        storyPrompt.innerText = "Your Move"
-
-        choice1Btn.innerText = "Attack"
+        storyPrompt.innerText = `${mob.name}'s Move`
+       
+    
+        choice1Btn.style.visibility = "Attack"
         choice2Btn.innerText = "Heal"
-        choice3Btn.innerText = "Defend"
-        
+        choice3Btn.style.visibility = "Defend"
+    
         btns.forEach((btn) => {
-            btn.addEventListener('click', playerTurnHandler)
-        })
+                btn.addEventListener('click', playerTurnHandler)
+            })       
     }
-
     else if (game.enemies[1].fighting === true && playerTurn === false) {
+    
+      visibility3()
 
+        storyPrompt.innerText = `${game.enemies[1].name}'s Move`
 
-        storyPrompt.innerText = "Enemy's Move"
-        choice2Btn.style.visibility = "visible"
-
+    
         choice1Btn.style.visibility = "hidden"
         choice2Btn.innerText = "Next"
         choice3Btn.style.visibility = "hidden"
-        
+    
         btns.forEach((btn) => {
-            btn.addEventListener('click', mobTurn)
-        })       
+                btn.addEventListener('click', mobTurnHandler)
+            })       
+    }
+    else if (game.character.hp < 1 && playerTurn === true) { //skeleton defeat
+
+        reaction.innerText = " Oh No! You failed to defeat the skeleton!\n you are forever apart of the undead army. "
+
+        storyImg.style.backgroundImage = 'url(./images/undeadarmy.jpg)'
+        
+        gameOver()
     }
 
 }

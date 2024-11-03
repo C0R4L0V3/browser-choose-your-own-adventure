@@ -214,7 +214,7 @@ main {
     cursor: pointer;
 }
 
-#EnemyInfo {
+#enemyInfo {
     background-image: url(./images/cardbg.png);
     background-size: cover;
     color: azure;
