@@ -66,7 +66,7 @@ const game = {
     ],
     enemies: [
         { name: "bear", hp: 50, attack: 6, defense: 5, encountered: false, fighting: false, defeated: false, loot: []},
-        { name: "skeleton", hp: 20, attack: 4, defense: 3, encountered: false, fighting: false, defeated: false, loot: []},
+        { name: "skeleton", hp: 20, attack: 4, defense: 3, encountered: true, fighting: false, defeated: true, loot: []},
         { name: null, hp: 0, attack: 0, defense: 0, loot: []},
     ],
     // gameScenes: [
