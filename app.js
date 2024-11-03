@@ -477,7 +477,7 @@ const charHandler = (num) => {
     
   
     charImg.style.visibility = "visible";
-    charImg.style.backgroundImage = `url(./images/${game.character.race.toLowerCase()}.jpeg)`;
+    charImg.style.backgroundImage = `url(./images/${game.chars[num].race.toLowerCase()}.jpeg)`;
     
     userInfo.style.visibility = "visible";
 
