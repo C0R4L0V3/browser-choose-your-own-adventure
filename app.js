@@ -1,3 +1,13 @@
+// -- imports --
+// import { randomDice } from "./battle";
+import { battle } from "./battle";
+// import { playerAttack } from "./battle";
+// import { playerDefend } from "./battle";
+import { playerTurnHandler } from "./battle";
+// import { mobAttack } from "./battle";
+// import { mobDefend } from "./battle";
+import { mobTurnHandler } from "./battle";
+
 //-- query selector for Character Stats --
 const userInfo = document.querySelector("#charStats");
 const userName = document.querySelector("#userName");
@@ -87,7 +97,7 @@ let questQued = false
 let questCompleted = false
 let questCompletePost = false
 
-let playerTurn = true
+let playerTurn = null
 let playerDefending = false
 
 let mobDefending = false
@@ -177,80 +187,6 @@ const visibility3 = () => {
 
 //====== Combat Logic ================
 
-//Dice generator, can be used for damage or healing
-
-const randomDice = (min, max) => {
-    const minDice = Math.ceil(min)
-    const maxDice = Math.floor(max)
-    return Math.floor(Math.random() * (maxDice + minDice) + minDice)
-};
-
-const battle = (fight) => {
-
-    game.enemies.forEach((mob)=>{
-
-        if(fight.target === choice1Btn && mob.encountered === true && mob.defeated === false){
-            firstMove = randomDice(1, 7)
-            console.log(mob)
-                if(firstMove > 3){
-                    // mob.fighting = true
-                    playerTurn = true
-                    evalPhase()
-                    // if (mob === 0){
-                    //     encounterBear()
-                    // }
-                    // else if (mob === 1){
-                    //     encounterSkel()
-                    // }
-                }   
-                else {
-                    playerTurn = false
-                    evalPhase()
-                    // playerTurn = false
-                    // if (mob === 0){
-                    //     encounterBear()
-                    // }
-                    // else if (mob === 1){
-                    //     encounterSkel()
-                    // } 
-                }
-                mob.fighting = true
-        }
-        else if (fight.target === choice3Btn){
-            enemyImg.style.visibility = "hidden"
-            enemyStats.style.visibility = "hidden"
-            oldChurchDir()  
-        }
-        btns.forEach((btn) => {
-            btn.removeEventListener('click', battle)
-        })
-    })
-}
-
-// const evalPhase = () => {
-    // game.enemies.forEach((mob)=>{
-    //     if(game.character.hp < 1 && playerTurn === true ){
-            
-    //         game.character.attack = 0
-    //         userAtt.innerText = "Attack: " + 0  // adjust and displays values
-
-    //         game.character.defense = 0
-    //         userDef.innerText = "Defence: " + 0
-
-    //     }
-    //     else if (mob.hp < 1 && mob.fighting === true && playerTurn == false){  
-    //     }
-    //     else if (game.character.hp >= 1 && playerTurn === true){   
-    //     }  
-    //     else if (mob.hp >= 1 && playerTurn === false){
-        
-    //     }
-
-//         turn()
-//     })
-// }
-
-
 const evalPhase = () => {
 
     game.enemies.forEach((mob) =>{
@@ -261,201 +197,8 @@ const evalPhase = () => {
             encounterSkel() 
         }
     })
-}
-
-
-//==============player turn handler================
-
-const playerDefend = () => {
-    playerDefending = true
-    game.character.defense *= 2
-    userDef.innerText = "Defense: " + game.character.defense
-    reaction.innerText = `You are bracing for an attack! \n defence increased to ${game.character.defense}`
-}
-
-const playerAttack = () => {
-
-    game.enemies.forEach((mob) =>{
-        if (mob.fighting === true){
-            damage = (randomDice(1, 9) + game.character.attack) - mob.defense //<<-- damage total
-            mob.hp -= damage
-                if(mob.hp < 0) {
-                    mob.hp = 0
-                }
-            reaction.innerText = `${mob.name} took ${damage} damage!` //<<-- changes the prompt
-            enemyHP.innerText ="HP: " + mob.hp//-- changes enemy hp display
-        }
-    })
-}
-
-const playerTurnHandler = (player) => {
-
-    visibility3()
-
-
-    if (player.target === choice1Btn){     //<<--- attack choice
-
-        game.enemies.forEach((mob)=>{ //<<-- loops through enemy array
-                if(playerTurn === true && mob.fighting === true){     //<<---determines which mob being faces
-                    if (mobDefending = true)
-                        playerAttack()
-                        mob.defense /= 2
-                        mobDefending = false
-                        enemyDef.innerText = "Defense: " + mob.defense
-                } else {
-                    playerAttack()
-                }
-            })
-
-        }
-
-    else if (playerTurn === true && player.target === choice2Btn){ //-- handles healing choice
-
-        if (game.character.race === "Human"){   //<<-- determines picked race for hp values
-
-            if (game.character.hp < 35){        
-                game.character.hp += randomDice(1, 9)
-
-                reaction.innerText = `You recovered some HP`
-                userHP.innerText ="HP: " + game.character.hp 
-
-                if (game.character.hp > 35){    //<<-- if healing exceeds race max, adjusts the hp back to max
-                    game.character.hp = 35
-                    userHP.innerText = "HP: " + game.character.hp 
-                }
-            }
-            else if (game.character.hp === 35){ //<<-- if hp is maxed invalidates option and loops back through
-                storyPrompt.innerText = "Invalid choice \n Please try again."
-                encounterSkel()
-
-                btns.forEach((btn) => {
-                    btn.removeEventListener('click', playerTurnHandler)
-                })
-            }
-        }
-        else if (game.character.race === "Elf"){
-
-            if (game.character.hp < 30){
-                game.character.hp += randomDice(1, 9)
-
-                reaction.innerText = `You recovered some HP`
-                userHP.innerText = "HP: " + game.character.hp 
-
-                if (game.character.hp > 30){
-                    game.character.hp = 30
-                    userHP.innerText = "HP: " + game.character.hp 
-                }
-            }
-            else if (game.character.hp === 30){
-                storyPrompt.innerText = "Invalid choice \n Please try again."
-               encounterSkel()
-
-               btns.forEach((btn) => {
-                btn.removeEventListener('click', playerTurnHandler)
-            })
-            }
-        }
-
-        else if (game.character.race === "Dwarf"){
-            if (game.character.hp < 40){
-                game.character.hp += randomDice(1, 9)
-
-                reaction.innerText = `You recovered some HP`
-                userHP.innerText ="HP: " + game.character.hp 
-
-                if (game.character.hp > 40){
-                    game.character.hp = 40
-                    userHP.innerText ="HP: " + game.character.hp 
-                }
-            }
-            else if (game.character.hp === 40){
-                storyPrompt.innerText = "Invalid choice \n Please try again."
-                encounterSkel()
-
-                btns.forEach((btn) => {
-                    btn.removeEventListener('click', playerTurnHandler)
-                })
-            }
-        }
-    }
-
-    else if (playerTurn === true && player.target === choice3Btn){
-                    //-- increases defense stat for 1 turn
-        playerDefend()
-    }
-
-    btns.forEach((btn) => {
-        btn.removeEventListener('click', playerTurnHandler)
-    })
-
-    playerTurn = false
-    evalPhase()
 
 }
-
-const mobAttack = () => {
-    damage = (randomDice(1, 9) + mob.attack) - game.character.defense
-    game.character.hp -= damage
-        if(game.character.hp < 0 ) {
-            game.character.hp = 0
-        }
-    userHP.innerText = "HP: "+ game.character.hp
-    reaction.innerText = `You took ${damage} damage`  
-}
-
-const mobDefend = () => {
-    mobDefending = true
-    mob.defense *= 2
-    enemyDef.innerText = "Defense: " + mob.defense
-    reaction.innerText = `${mob.name}'s defense has gone up.`
-}
-
-const mobTurnHandler= () => {
-
-   visibility1()
-
-    game.enemies.forEach((mob) => {
-        if(mob.fighting === true){
-            if (randomDice(1, 7) >= 4){
-                if(playerDefending === true){
-                    damage = (randomDice(1, 9) + mob.attack) - game.character.defense
-                    game.character.hp -= damage
-                        if(game.character.hp < 0 ) {
-                            game.character.hp = 0
-                        }
-                    userHP.innerText = "HP: "+ game.character.hp
-                    reaction.innerText = `You took ${damage} damage`  
-                    game.character.defense /= 2
-                    playerDefending = false
-                    userDef.innerText = "Defense: " + game.character.defense
-                }
-                else{
-                    damage = (randomDice(1, 9) + mob.attack) - game.character.defense
-                    game.character.hp -= damage
-                        if(game.character.hp < 0 ) {
-                            game.character.hp = 0
-                        }
-                    userHP.innerText = "HP: "+ game.character.hp
-                    reaction.innerText = `You took ${damage} damage`  
-                }
-            }
-            else {
-                mobDefending = true
-                mob.defense *= 2
-                enemyDef.innerText = "Defense: " + mob.defense
-                reaction.innerText = `${mob.name}'s defense has gone up.`
-            }
-        }   
-    })
-
-    btns.forEach((btn) => {
-        btn.removeEventListener('click', mobTurnHandler)
-    })
-    
-    playerTurn = true
-    evalPhase()
-}
-
 
 //================================ HELPERS =========================
 
@@ -1263,7 +1006,9 @@ const encounterSkel = () => {
         }
         else if (mob.fighting === true && playerTurn === true) {
         
-            visibility2()
+
+            console.log('will this hit!? player')
+            visibility3()
         
             storyPrompt.innerText = `Your Move`
     
@@ -1277,8 +1022,11 @@ const encounterSkel = () => {
             })       
         }
         else if (mob.fighting === true && playerTurn === false) {
+
+            console.log('will mob hit?');
+            
         
-        visibility3()
+        visibility1()
 
             storyPrompt.innerText = `${mob.name}'s Move`
 
@@ -1291,6 +1039,7 @@ const encounterSkel = () => {
                 btn.addEventListener('click', mobTurnHandler)
             })       
         }
+
         else if(mob.hp === 0 && playerTurn == false){
 
             visibility1()
@@ -1298,7 +1047,7 @@ const encounterSkel = () => {
             mob.fighting = false 
             mob.defeated = true
 
-            reaction.innerText = " You have laid this to rest."
+            reaction.innerText = `You have laid the ${mob.name} to rest.`
 
             storyImg.style.backgroundImage = 'url(./images/churchinner.jpg)'
 
