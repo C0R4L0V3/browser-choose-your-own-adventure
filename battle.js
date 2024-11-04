@@ -1,48 +1,17 @@
 //====== Combat Logic ================
- export const randomDice = (min, max) => {
-    const minDice = Math.ceil(min)
-    const maxDice = Math.floor(max)
-    return Math.floor(Math.random() * (maxDice + minDice) + minDice)
-};
 
-export const battle = (fight) => {
+const evalPhase = () => {
 
-    game.enemies.forEach((mob)=>{
-
-        if(fight.target === choice1Btn && mob.encountered === true && mob.defeated === false){
-            firstMove = randomDice(1, 7)
-            // console.log(mob)
-                if(firstMove > 0){
-                    playerTurn = true
-                    console.log('PLAYER TURN = ' + playerTurn)
-                    
-                    playerTurn = true
-                    encounterSkel()
-
-                }   
-                else {
-                    playerTurn = false
-                    encounterSkel()
-
-                }
-                console.log(fight.taget);
-                mob.fighting = true
+    game.enemies.forEach((mob) =>{
+        if(mob === 0 && mob.encountered === true && mob.defeated === false){
+            encounterBear() 
         }
-        else if (fight.target === choice3Btn){
-            console.log(fight.taget);
-            enemyImg.style.visibility = "hidden"
-            enemyStats.style.visibility = "hidden"
-            oldChurchDir()  
+        else if (mob === 1 && mob.encountered === true && mob.defeated === false){
+            encounterSkel() 
         }
-
-        console.log(fight.taget);
-        
-        btns.forEach((btn) => {
-            btn.removeEventListener('click', battle)
-        })
     })
-}
 
+}
 
 //==============player turn handler================
 
@@ -69,7 +38,7 @@ const playerAttack = () => {
 }
 
 
-export const playerTurnHandler = (player) => {
+const playerTurnHandler = (player) => {
 
     console.log(player.target.innerText);
     console.log('test');   
